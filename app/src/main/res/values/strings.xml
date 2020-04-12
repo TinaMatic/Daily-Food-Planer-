@@ -22,4 +22,7 @@
     <!--Notes screen-->
     <string name="notesTitle">Notes:</string>
     <string name="myNotes">My Notes</string>
+
+    <!--Schedule screen-->
+    <string name="month_label">Month:</string>
 </resources>
