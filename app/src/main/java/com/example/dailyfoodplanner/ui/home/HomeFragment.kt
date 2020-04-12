@@ -3,6 +3,7 @@ package com.example.dailyfoodplanner.ui.home
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
+import com.example.dailyfoodplanner.utils.Dateutils.Companion.DATE_FORMAT
+import com.example.dailyfoodplanner.utils.Dateutils.Companion.TIME_FORMAT
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import dagger.android.support.DaggerFragment
@@ -96,7 +99,10 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         val day = cal.get(Calendar.DAY_OF_MONTH)
 
         val datePicker = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-            editText?.setText("$dayOfMonth/$month/$year")
+            cal.set(Calendar.YEAR, year)
+            cal.set(Calendar.MONTH, month)
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            editText?.setText(SimpleDateFormat(DATE_FORMAT).format(cal.time))
         }, year, month, day)
         datePicker.show()
     }
@@ -110,7 +116,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         val timePicker = TimePickerDialog(requireContext(), TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
             cal.set(Calendar.MINUTE, minute)
-            editText?.setText(SimpleDateFormat("HH:mm").format(cal.time))
+            editText?.setText(SimpleDateFormat(TIME_FORMAT).format(cal.time))
         }, hour, minute, true)
 
         timePicker.show()
