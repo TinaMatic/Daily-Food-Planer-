@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <FrameLayout
         android:id="@+id/frameLayoutDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -13,29 +13,29 @@
         <LinearLayout
             android:id="@+id/linearLayoutDate"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:orientation="vertical"
+            android:layout_height="120dp"
+            android:background="@color/colorPrimary"
             android:gravity="center"
-            android:background="@color/colorPrimary">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/date"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                android:layout_gravity="start"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_gravity="start"/>
+                android:text="@string/date"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Today, 10/07/20"
-                app:startIconDrawable="@drawable/calendar"
-                app:endIconMode="clear_text">
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/calendar">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDate"
@@ -49,6 +49,20 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayoutAddBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frameLayoutDate">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/colorPrimary">
+        </LinearLayout>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnAdd"
             android:layout_width="wrap_content"
@@ -57,14 +71,13 @@
             android:layout_margin="8dp"
             android:elevation="1dp"
             android:src="@drawable/icn_add"/>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </FrameLayout>
 
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/frameLayoutDate"
+        android:layout_below="@id/frameLayoutAddBtn"
         android:layout_marginTop="5dp"
         android:layout_above="?attr/customNavigationLayout">
 
@@ -78,7 +91,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:orientation="horizontal"
-                android:layout_margin="5dp">
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp">
 
                 <TextView
                     android:id="@+id/tvBreakfast"
