@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/frameLayoutDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutDate"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="start"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Today, 10/07/20"
+                app:startIconDrawable="@drawable/calendar"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:inputType="date|textMultiLine"
+                    android:padding="10dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="8dp"
+            android:elevation="1dp"
+            android:src="@drawable/icn_add"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frameLayoutDate"
+        android:layout_marginTop="5dp"
+        android:layout_above="?attr/customNavigationLayout">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutBreakfast"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/tvBreakfast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/breakfast"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/homeTextView"/>
+
+                <View
+                    android:id="@+id/fakeView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputBreakfast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/fakeView"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignTop="@id/tvBreakfast"
+                    android:layout_marginTop="25dp"
+                    app:startIconDrawable="@drawable/clock"
+                    android:hint="Time"
+                    app:endIconMode="clear_text"
+                    android:layout_below="@id/tvBreakfast">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTimeBreakfast"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="time"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/spinnerBreakfast"
+                    style="?android:attr/spinnerStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@id/fakeView"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:spinnerMode="dropdown" />
+
+            </RelativeLayout>
+
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSnack1"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:orientation="horizontal"
+                android:layout_below="@id/relativeLayoutBreakfast"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/tvSnack1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/snack1"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/homeTextView"/>
+
+                <View
+                    android:id="@+id/fakeView1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputSnack1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/fakeView1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignTop="@id/tvSnack1"
+                    android:layout_marginTop="25dp"
+                    app:startIconDrawable="@drawable/clock"
+                    android:hint="Time"
+                    app:endIconMode="clear_text"
+                    android:layout_below="@id/tvSnack1">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTimeSnack1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="time"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/spinnerSnack1"
+                    style="?android:attr/spinnerStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@id/fakeView1"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:spinnerMode="dropdown" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutLunch"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:orientation="horizontal"
+                android:layout_below="@id/relativeLayoutSnack1"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/tvLunch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lunch"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/homeTextView"/>
+
+                <View
+                    android:id="@+id/fakeView2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLunch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/fakeView2"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignTop="@id/tvLunch"
+                    android:layout_marginTop="25dp"
+                    app:startIconDrawable="@drawable/clock"
+                    android:hint="Time"
+                    app:endIconMode="clear_text"
+                    android:layout_below="@id/tvLunch">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTimeLunch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="time"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/spinnerLunch"
+                    style="?android:attr/spinnerStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@id/fakeView2"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:spinnerMode="dropdown" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSnack2"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:orientation="horizontal"
+                android:layout_below="@id/relativeLayoutLunch"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/tvSnack2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/snack2"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/homeTextView"/>
+
+                <View
+                    android:id="@+id/fakeView4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputSnack2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/fakeView4"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignTop="@id/tvSnack2"
+                    android:layout_marginTop="25dp"
+                    app:startIconDrawable="@drawable/clock"
+                    android:hint="Time"
+                    app:endIconMode="clear_text"
+                    android:layout_below="@id/tvSnack2">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTimeSnack2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="time"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/spinnerSnack2"
+                    style="?android:attr/spinnerStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@id/fakeView4"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:spinnerMode="dropdown" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutDinner"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:orientation="horizontal"
+                android:layout_below="@id/relativeLayoutSnack2"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/tvDinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dinner"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/homeTextView"/>
+
+                <View
+                    android:id="@+id/fakeView5"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputDinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/fakeView5"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignTop="@id/tvDinner"
+                    android:layout_marginTop="25dp"
+                    app:startIconDrawable="@drawable/clock"
+                    android:hint="Time"
+                    app:endIconMode="clear_text"
+                    android:layout_below="@id/tvDinner">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTimeDinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="time"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/spinnerDinner"
+                    style="?android:attr/spinnerStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@id/fakeView5"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:spinnerMode="dropdown" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

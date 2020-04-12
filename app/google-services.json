@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "704660895917",
+    "firebase_url": "https://daily-food-planner.firebaseio.com",
+    "project_id": "daily-food-planner",
+    "storage_bucket": "daily-food-planner.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704660895917:android:9e8b330325b649d3b76e24",
+        "android_client_info": {
+          "package_name": "com.example.dailyfoodplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704660895917-0ml8vvf409ao2pi9cg8eg682e1p3q2t9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dailyfoodplanner",
+            "certificate_hash": "b03e0aa13d345deb9e2eafd909b8dd6311d0504e"
+          }
+        },
+        {
+          "client_id": "704660895917-hkhilntv5f036dcjrobj1u25d1k3qbua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVeqT7bFNqJHglJW-jEdC-DF2LBB3WYtw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704660895917-hkhilntv5f036dcjrobj1u25d1k3qbua.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
