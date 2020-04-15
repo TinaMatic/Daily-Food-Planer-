@@ -1,7 +1,6 @@
 package com.example.dailyfoodplanner.ui.notes
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
-import com.jakewharton.rxbinding2.view.enabled
 import kotlinx.android.synthetic.main.row_note.view.*
-import java.util.function.Predicate
 
 class NotesAdapter (val context: Context, val notesList: List<Notes>): RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
@@ -32,13 +29,6 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>): RecyclerV
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindView(notesList[position])
-
-//        if (listOfCheckedNotes.isNotEmpty()){
-//            holder.itemView.isEnabled = false
-//        }
-//        holder.itemView.setOnClickListener {
-//            onItemClickListener?.onItemClick(notesList[position])
-//        }
 
     }
 
@@ -70,23 +60,12 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>): RecyclerV
                 checkedChangeListener?.onCheckedChange(listOfCheckedNotes)
             }
 
-            itemView.setOnClickListener {
-                onItemClickListener?.onItemClick(note)
+            itemView.setOnClickListener{
+                if(listOfCheckedNotes.isEmpty()){
+                    onItemClickListener?.onItemClick(note)
+                }
+
             }
-//            if(listOfCheckedNotes.isNotEmpty()){
-//                itemView.isEnabled = false
-//            } else{
-//                itemView.isEnabled = true
-//                itemView.setOnClickListener {
-//                    onItemClickListener?.onItemClick(note)
-//                }
-//            }
-//
-//            if(itemView.isEnabled){
-//                itemView.setOnClickListener {
-//                    onItemClickListener?.onItemClick(note)
-//                }
-//            }
 
         }
     }

@@ -209,9 +209,9 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
     }
 
     override fun onItemClick(note: Notes) {
-        Toast.makeText(context, note.note, Toast.LENGTH_SHORT).show()
         shouldEdit = true
         clickedNote = note
         showEditText(note.note)
+
     }
 }

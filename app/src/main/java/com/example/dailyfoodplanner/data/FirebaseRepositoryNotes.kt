@@ -74,15 +74,5 @@ class FirebaseRepositoryNotes @Inject constructor() {
 
     fun editNote(note: Notes){
         notesDatabase.child(note.notesId!!).setValue(note)
-
-//         Observable.create<Boolean> { emitter ->
-//            notesDatabase.child(notes.notesId!!).setValue(notes).addOnCompleteListener {task: Task<Void> ->
-//                if(task.isSuccessful){
-//                    emitter.onNext(true)
-//                }else{
-//                    emitter.onNext(false)
-//                }
-//            }
-//        }
     }
 }
