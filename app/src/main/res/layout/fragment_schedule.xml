@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <FrameLayout
+        android:id="@+id/scheduleFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/linearLayoutMonth"
         android:layout_width="match_parent"

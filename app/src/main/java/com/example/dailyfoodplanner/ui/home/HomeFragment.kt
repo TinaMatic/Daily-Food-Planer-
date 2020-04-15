@@ -83,6 +83,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             if (ifAllDataIsFilled()){
                 writeAllData()
                 cleanAllFields()
+                etTimeDinner.clearFocus()
             }
         })
     }

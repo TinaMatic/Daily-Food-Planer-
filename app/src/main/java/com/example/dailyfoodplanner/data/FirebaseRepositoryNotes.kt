@@ -75,4 +75,8 @@ class FirebaseRepositoryNotes @Inject constructor() {
     fun editNote(note: Notes){
         notesDatabase.child(note.notesId!!).setValue(note)
     }
+
+    fun clean(){
+
+    }
 }

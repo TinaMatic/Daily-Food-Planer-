@@ -25,6 +25,8 @@
 
     <!--Schedule screen-->
     <string name="month_label">Month:</string>
+    <string name="delete_title">Delete</string>
+    <string name="delete_message">Are you sure you want to delete?</string>
 
     <!--Notifications-->
     <string name="notification_title">Daily Food Plan Notification</string>
