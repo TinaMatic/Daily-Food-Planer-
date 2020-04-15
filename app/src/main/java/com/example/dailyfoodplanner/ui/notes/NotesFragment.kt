@@ -4,7 +4,6 @@ package com.example.dailyfoodplanner.ui.notes
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -14,7 +13,6 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -24,7 +22,9 @@ import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.dailyfoodplanner.R
+import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
+import com.jakewharton.rxbinding2.view.clicks
 import dagger.android.support.DaggerFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -35,7 +35,7 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class NotesFragment : DaggerFragment(), View.OnClickListener {
+class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnItemClickedListener, NotesAdapter.OnCheckedChangeListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -49,6 +49,9 @@ class NotesFragment : DaggerFragment(), View.OnClickListener {
 
     private var isEditTextVisible: Boolean = false
     private var defaultColor: Int = 0
+    private var listCheckedNotes = arrayListOf<CheckedNotes>()
+    private var shouldEdit: Boolean = false
+    private var clickedNote: Notes? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,6 +78,7 @@ class NotesFragment : DaggerFragment(), View.OnClickListener {
 
     private fun setInitials(){
         btnAddNotes.setOnClickListener(this)
+        btnDeleteNotes.setOnClickListener(this)
         defaultColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
         inputManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         revealView.visibility = View.INVISIBLE
@@ -84,7 +88,7 @@ class NotesFragment : DaggerFragment(), View.OnClickListener {
     private fun loadAllNotes(){
         notesViewModel.loadAllNotes()
 
-        notesViewModel.notesLiveData.observe(this, Observer {listAllNotes->
+        notesViewModel.notesLiveData.observe(viewLifecycleOwner, Observer {listAllNotes->
             setUpAdapter(listAllNotes)
             notesAdapter.notifyDataSetChanged()
         })
@@ -92,6 +96,10 @@ class NotesFragment : DaggerFragment(), View.OnClickListener {
 
     private fun setUpAdapter(notesList: List<Notes>){
         notesAdapter = NotesAdapter(requireContext(), notesList)
+
+        notesAdapter.setOnItemCheckedListener(this)
+        notesAdapter.setOnItemClickListener(this)
+
         recyclerViewNotes.layoutManager = LinearLayoutManager(context)
         recyclerViewNotes.adapter = notesAdapter
 
@@ -113,37 +121,24 @@ class NotesFragment : DaggerFragment(), View.OnClickListener {
 
     }
 
-
-//    private fun colorize(photo: Bitmap){
-//        val palette = Palette.from(photo).generate()
-//        applyPalette(palette)
-//    }
-
-    private fun applyPalette(palette: Palette){
-        activity?.window?.setBackgroundDrawable(ColorDrawable(palette.getDarkMutedColor(defaultColor)))
-        notesNameHolder.setBackgroundColor(palette.getMutedColor(defaultColor))
-        revealView.setBackgroundColor(palette.getLightVibrantColor(defaultColor))
+    private fun deleteNotes(listOfCheckedNotes: List<CheckedNotes>){
+        compositeDisposable.add(
+            notesViewModel.deleteNote(listOfCheckedNotes).subscribe {
+                if(it){
+                    btnDeleteNotes.visibility = View.INVISIBLE
+                    btnAddNotes.visibility = View.VISIBLE
+                    Toast.makeText(context, "Notes successfully deleted", Toast.LENGTH_SHORT).show()
+                } else{
+                    Toast.makeText(context, "Something went wrong when deleting", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
     }
 
     override fun onClick(view: View?) {
         when(view?.id){
-            R.id.btnAddNotes -> if(!isEditTextVisible){
-                revealEditText(revealView)
-                etTodoNotes.requestFocus()
-                inputManager.showSoftInput(etTodoNotes, InputMethodManager.SHOW_IMPLICIT)
-                btnAddNotes.setImageResource(R.drawable.icn_morph)
-                val animatable = btnAddNotes.drawable as Animatable
-                animatable.start()
-            } else {
-                writeNote(etTodoNotes.text.toString())
-                notesAdapter.notifyDataSetChanged()
-                etTodoNotes.setText("")
-                inputManager.hideSoftInputFromWindow(etTodoNotes.windowToken, 0)
-                hideEditText(revealView)
-                btnAddNotes.setImageResource(R.drawable.icn_morph_reverse)
-                val animatable = btnAddNotes.drawable as Animatable
-                animatable.start()
-            }
+            R.id.btnAddNotes -> showEditText("")
+            R.id.btnDeleteNotes -> deleteNotes(listCheckedNotes)
         }
     }
 
@@ -170,5 +165,53 @@ class NotesFragment : DaggerFragment(), View.OnClickListener {
         })
         isEditTextVisible = false
         anim.start()
+    }
+
+    private fun showEditText(note: String){
+        if(!isEditTextVisible) {
+            revealEditText(revealView)
+            etTodoNotes.requestFocus()
+            etTodoNotes.setText(note)
+            inputManager.showSoftInput(etTodoNotes, InputMethodManager.SHOW_IMPLICIT)
+            btnAddNotes.setImageResource(R.drawable.icn_morph)
+            val animatable = btnAddNotes.drawable as Animatable
+            animatable.start()
+        } else {
+            if(shouldEdit){
+                //edit note
+                notesViewModel.editNote(Notes(clickedNote?.notesId, etTodoNotes.text.toString()))
+                shouldEdit = false
+            } else{
+                writeNote(etTodoNotes.text.toString())
+            }
+            notesAdapter.notifyDataSetChanged()
+            etTodoNotes.setText("")
+            inputManager.hideSoftInputFromWindow(etTodoNotes.windowToken, 0)
+            hideEditText(revealView)
+            btnAddNotes.setImageResource(R.drawable.icn_morph_reverse)
+            val animatable = btnAddNotes.drawable as Animatable
+            animatable.start()
+        }
+    }
+
+    override fun onCheckedChange(listOfCheckedNotes: List<CheckedNotes>) {
+        listCheckedNotes.clear()
+        listCheckedNotes.addAll(listOfCheckedNotes)
+
+        if(listOfCheckedNotes.isNotEmpty()){
+            btnDeleteNotes.visibility = View.VISIBLE
+            btnAddNotes.visibility = View.INVISIBLE
+        } else{
+            btnAddNotes.visibility = View.VISIBLE
+            btnDeleteNotes.visibility = View.INVISIBLE
+        }
+
+    }
+
+    override fun onItemClick(note: Notes) {
+        Toast.makeText(context, note.note, Toast.LENGTH_SHORT).show()
+        shouldEdit = true
+        clickedNote = note
+        showEditText(note.note)
     }
 }

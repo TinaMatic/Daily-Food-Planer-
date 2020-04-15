@@ -9,10 +9,9 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class FirebaseRepository @Inject constructor() {
+class FirebaseRepositoryDailyPlaner @Inject constructor() {
 
     private val dailyPlanerDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference.child("DailyPlaner")
-    private val notesDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference.child("Notes")
 
     var compositeDisposable = CompositeDisposable()
 
@@ -88,49 +87,6 @@ class FirebaseRepository @Inject constructor() {
             },{
                 Log.d("readDailyPlansForMonth", it.toString())
             }))
-        }
-    }
-
-    fun writeNotes(notes: Notes): Observable<Boolean>{
-        val notesId = notesDatabase.push().key
-
-        return Observable.create<Boolean> {emitter ->
-            val tempNotesObject = Notes(notesId, notes.note)
-
-            notesDatabase.child(notesId!!).setValue(tempNotesObject).addOnCompleteListener { task: Task<Void> ->
-                if(task.isSuccessful){
-                    emitter.onNext(true)
-                } else{
-                    emitter.onNext(false)
-                }
-            }
-        }
-    }
-
-    fun loadAllNotes(): Observable<List<Notes>>{
-        return Observable.create<List<Notes>> {emitter ->
-            notesDatabase.addValueEventListener(object : ValueEventListener{
-
-                val listNotes = arrayListOf<Notes>()
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    listNotes.clear()
-                    val orderSnapshot = dataSnapshot.children
-
-                    for(notes in orderSnapshot){
-                        val notesId = notes.key
-                        val note = notes.child("note").value.toString()
-
-                        listNotes.add(Notes(notesId, note))
-                    }
-                    emitter.onNext(listNotes)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    emitter.onError(error.toException())
-                }
-
-            })
         }
     }
 }
