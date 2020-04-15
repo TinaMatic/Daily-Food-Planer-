@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
-import com.example.dailyfoodplanner.utils.Dateutils.Companion.convertDateToCalendarObject
-import com.example.dailyfoodplanner.utils.Dateutils.Companion.getDayOfWeek
+import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.convertDateToCalendarObject
+import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.getDayOfWeek
 import kotlinx.android.synthetic.main.schedule_row.view.*
-import java.time.DayOfWeek
 import java.util.*
 
 class ScheduleAdapter (val context: Context, private val listDailyPlansForMonth: List<DailyPlaner>)

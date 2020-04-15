@@ -2,7 +2,7 @@ package com.example.dailyfoodplanner.ui.schedule
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.dailyfoodplanner.data.FirebaseRepository
+import com.example.dailyfoodplanner.data.FirebaseRepositoryDailyPlaner
 import com.example.dailyfoodplanner.model.DailyPlaner
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class ScheduleViewModel @Inject constructor(): ViewModel() {
 
     @Inject
-    lateinit var firebaseRepository: FirebaseRepository
+    lateinit var firebaseRepositoryDailyPlaner: FirebaseRepositoryDailyPlaner
 
     private var compositeDisposable = CompositeDisposable()
 
@@ -21,7 +21,7 @@ class ScheduleViewModel @Inject constructor(): ViewModel() {
 
     fun readDailyPlansForMonth(month: Int){
 
-        compositeDisposable.add(firebaseRepository.readDailyPlansForMonth(month)
+        compositeDisposable.add(firebaseRepositoryDailyPlaner.readDailyPlansForMonth(month)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -39,7 +39,7 @@ class ScheduleViewModel @Inject constructor(): ViewModel() {
 
 
     fun clear(){
-        firebaseRepository.compositeDisposable.clear()
+        firebaseRepositoryDailyPlaner.compositeDisposable.clear()
         compositeDisposable.clear()
     }
 

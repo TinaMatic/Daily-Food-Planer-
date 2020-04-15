@@ -3,7 +3,6 @@ package com.example.dailyfoodplanner.ui.home
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
-import com.example.dailyfoodplanner.utils.Dateutils.Companion.DATE_FORMAT
-import com.example.dailyfoodplanner.utils.Dateutils.Companion.TIME_FORMAT
+import com.example.dailyfoodplanner.notification.AlarmScheduler
+import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.DATE_FORMAT
+import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.TIME_FORMAT
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import dagger.android.support.DaggerFragment
@@ -34,6 +34,8 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
     var compositeDisposable = CompositeDisposable()
 
     private val cal = Calendar.getInstance()
+
+    private var dayOfWeek: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -103,6 +105,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             cal.set(Calendar.MONTH, month)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             editText?.setText(SimpleDateFormat(DATE_FORMAT).format(cal.time))
+            dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
         }, year, month, day)
         datePicker.show()
     }
@@ -130,6 +133,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         compositeDisposable.add(homeViewModel.writeDailyPlaner(dailyPlaner).subscribe {
             if (it){
                 Toast.makeText(context, "Daily plan was successfully added", Toast.LENGTH_SHORT).show()
+                AlarmScheduler.scheduleAlarm(requireContext(), dailyPlaner, "breakfast", dayOfWeek!!)
             } else{
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
             }

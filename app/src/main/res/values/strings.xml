@@ -25,4 +25,11 @@
 
     <!--Schedule screen-->
     <string name="month_label">Month:</string>
+
+    <!--Notifications-->
+    <string name="notification_title">Daily Food Plan Notification</string>
+    <string name="action_notify_daily_planer">com.example.dailyfoodplanner.action.DAILY_PLANER</string>
+    <string name="action_daily_planer">com.example.dailyfoodplanner.action.PLAN_DAILY</string>
+    <string name="notification_description">Time to eat</string>
+    <string name="daily_planer">Daily Planer</string>
 </resources>
