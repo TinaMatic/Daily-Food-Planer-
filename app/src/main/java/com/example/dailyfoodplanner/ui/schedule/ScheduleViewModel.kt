@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dailyfoodplanner.data.FirebaseRepositoryDailyPlaner
 import com.example.dailyfoodplanner.model.DailyPlaner
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -37,10 +38,19 @@ class ScheduleViewModel @Inject constructor(): ViewModel() {
             }))
     }
 
+    fun editDailyPlan(dailyPlaner: DailyPlaner){
+        firebaseRepositoryDailyPlaner.editDailyPlan(dailyPlaner)
+    }
+
+    fun deleteDilyPlan(dailyPlanId: String): Observable<Boolean>{
+        return firebaseRepositoryDailyPlaner.deleteDailyPlan(dailyPlanId)
+    }
+
 
     fun clear(){
         firebaseRepositoryDailyPlaner.compositeDisposable.clear()
         compositeDisposable.clear()
+        firebaseRepositoryDailyPlaner.clean()
     }
 
 }

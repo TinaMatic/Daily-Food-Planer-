@@ -89,4 +89,24 @@ class FirebaseRepositoryDailyPlaner @Inject constructor() {
             }))
         }
     }
+
+    fun editDailyPlan(dailyPlaner: DailyPlaner){
+        dailyPlanerDatabase.child(dailyPlaner.id!!).setValue(dailyPlaner)
+    }
+
+    fun deleteDailyPlan(dailyPlanId: String): Observable<Boolean>{
+        return Observable.create<Boolean> {emitter ->
+            dailyPlanerDatabase.child(dailyPlanId).removeValue().addOnCompleteListener { task: Task<Void> ->
+                if(task.isSuccessful){
+                    emitter.onNext(true)
+                } else{
+                    emitter.onNext(false)
+                }
+            }
+        }
+    }
+
+    fun clean(){
+        compositeDisposable.clear()
+    }
 }
