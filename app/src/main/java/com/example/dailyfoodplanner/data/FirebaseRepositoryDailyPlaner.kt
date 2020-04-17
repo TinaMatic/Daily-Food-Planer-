@@ -72,6 +72,39 @@ class FirebaseRepositoryDailyPlaner @Inject constructor() {
         }
     }
 
+    fun readSingleDailyPlan(dailyPlanId: String):Observable<DailyPlaner>{
+        return Observable.create<DailyPlaner> {emitter ->
+
+            dailyPlanerDatabase.child(dailyPlanId).addListenerForSingleValueEvent(object : ValueEventListener{
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val id = dataSnapshot.key
+                    val date = dataSnapshot.child("date").value.toString()
+                    val timeBreakfast = dataSnapshot.child("timeBreakfast").value.toString()
+                    val recipeBreakfast = dataSnapshot.child("recipeBreakfast").value.toString()
+                    val timeSnack1 = dataSnapshot.child("timeSnack1").value.toString()
+                    val recipeSnack1 = dataSnapshot.child("recipeSnack1").value.toString()
+                    val timeLunch = dataSnapshot.child("timeLunch").value.toString()
+                    val recipeLunch = dataSnapshot.child("recipeLunch").value.toString()
+                    val timeSnack2 = dataSnapshot.child("timeSnack2").value.toString()
+                    val recipeSnack2 = dataSnapshot.child("recipeSnack2").value.toString()
+                    val timeDinner = dataSnapshot.child("timeDinner").value.toString()
+                    val recipeDinner = dataSnapshot.child("recipeDinner").value.toString()
+
+                    emitter.onNext(DailyPlaner(id, date, timeBreakfast, recipeBreakfast,
+                        timeSnack1, recipeSnack1, timeLunch, recipeLunch, timeSnack2, recipeSnack2,
+                        timeDinner, recipeDinner))
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    emitter.onError(error.toException())
+                }
+
+            })
+        }
+    }
+
     fun readDailyPlansForMonth(month: Int): Observable<List<DailyPlaner>>{
         return Observable.create<List<DailyPlaner>> {emitter ->
             val listOfDailyPlans = arrayListOf<DailyPlaner>()
@@ -90,8 +123,17 @@ class FirebaseRepositoryDailyPlaner @Inject constructor() {
         }
     }
 
-    fun editDailyPlan(dailyPlaner: DailyPlaner){
-        dailyPlanerDatabase.child(dailyPlaner.id!!).setValue(dailyPlaner)
+    fun editDailyPlan(dailyPlaner: DailyPlaner): Observable<Boolean>{
+        return Observable.create<Boolean> {emitter ->
+            dailyPlanerDatabase.child(dailyPlaner.id!!).setValue(dailyPlaner).addOnCompleteListener { task: Task<Void> ->
+                if(task.isSuccessful){
+                    emitter.onNext(true)
+                } else{
+                    emitter.onNext(false)
+                }
+            }
+        }
+
     }
 
     fun deleteDailyPlan(dailyPlanId: String): Observable<Boolean>{

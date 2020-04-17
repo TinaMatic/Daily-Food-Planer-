@@ -1,6 +1,7 @@
 package com.example.dailyfoodplanner.utils
 
 import com.example.dailyfoodplanner.model.DailyPlaner
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -12,10 +13,20 @@ class DateTimeUtils {
 
         fun convertDateToCalendarObject(date: String): Calendar{
             val sdf = SimpleDateFormat(DATE_FORMAT, Locale.GERMANY)
-            var dateObj: Date
+            val dateObj: Date
             val calendar = Calendar.getInstance()
             dateObj = sdf.parse(date)
             calendar.time = dateObj
+
+            return calendar
+        }
+
+        fun convertTimeToObject(time: String): Calendar{
+            val sdf = SimpleDateFormat(TIME_FORMAT, Locale.getDefault())
+            val timeObj: Date
+            val calendar = Calendar.getInstance()
+            timeObj = sdf.parse(time)
+            calendar.time = timeObj
 
             return calendar
         }

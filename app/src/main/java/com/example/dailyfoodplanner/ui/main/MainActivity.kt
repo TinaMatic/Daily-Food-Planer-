@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.WindowManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.dailyfoodplanner.R
+import com.example.dailyfoodplanner.base.ViewModelFactory
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,5 +35,15 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+    }
+
+    fun displayBackButton(){
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        findNavController(R.id.nav_view).navigateUp()
+        return super.onSupportNavigateUp()
     }
 }
