@@ -9,14 +9,13 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
-import com.example.dailyfoodplanner.ui.home.HomeFragment
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_schedule.*
@@ -102,20 +101,18 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
             .setMessage(getString(R.string.delete_message))
             .setCancelable(true)
             .setPositiveButton("Yes"){_, _ ->
-//                compositeDisposable.add(
-                    scheduleViewModel.deleteDilyPlan(dailyPlanId).subscribe ({
-                    if(it){
+                scheduleViewModel.deleteDilyPlan(dailyPlanId).subscribe({
+                    if (it) {
                         Toast.makeText(context, "Daily Plan successfully deleted", Toast.LENGTH_SHORT).show()
                         scheduleAdapter.listDailyPlansForMonth.removeAt(position)
                         scheduleAdapter.notifyItemRemoved(position)
                         scheduleAdapter.notifyDataSetChanged()
-                    } else{
+                    } else {
                         Toast.makeText(context, "Something went wrong when deleting", Toast.LENGTH_SHORT).show()
                     }
-                },{})
-//                )
+                }, {})
             }
-            .setNegativeButton("No"){_,_->
+            .setNegativeButton("No") { _, _ ->
                 //do nothing
             }
 
@@ -124,14 +121,8 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
     }
 
     override fun editDailyPlan(dailyPlan: DailyPlaner) {
-//        scheduleViewModel.editDailyPlan(dailyPlan)
-        openHomeFragment()
-    }
+        val direction = ScheduleFragmentDirections.openHome(dailyPlan.id)
+        findNavController().navigate(direction)
 
-    fun openHomeFragment(){
-        childFragmentManager.beginTransaction()
-            .replace(R.id.scheduleFrameLayout, HomeFragment())
-            .addToBackStack(null)
-            .commit()
     }
 }

@@ -71,6 +71,16 @@
             android:layout_margin="8dp"
             android:elevation="1dp"
             android:src="@drawable/icn_add"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="8dp"
+            android:elevation="1dp"
+            android:visibility="invisible"
+            android:src="@android:drawable/ic_menu_edit"/>
     </FrameLayout>
 
 
