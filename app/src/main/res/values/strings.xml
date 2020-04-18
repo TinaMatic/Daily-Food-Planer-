@@ -44,7 +44,7 @@
         release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
         publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
 
-    <string name="btn_read_more">Read More</string>
+    <string name="btn_show_more">Show More</string>
     <string name="recipe_search">Recipe to search for</string>
     <string name="btn_search">Search</string>
     <string name="recipe_title">Enter recipe title</string>

@@ -45,11 +45,16 @@ class RecipesAdapter (val context: Context, val listRecipes: ArrayList<Recipes>)
                 onItemClickListener?.deleteRecipe(recipe.recipeId!!, position)
             }
 
+            itemView.btnShowMore.setOnClickListener {
+                onItemClickListener?.showMore(recipe)
+            }
+
         }
     }
 
     interface OnItemClickListener{
         fun editRecipe(recipe: Recipes, position: Int)
         fun deleteRecipe(recipeId: String, position: Int)
+        fun showMore(recipe: Recipes)
     }
 }

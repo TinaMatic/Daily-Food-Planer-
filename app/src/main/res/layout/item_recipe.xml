@@ -40,12 +40,12 @@
                 android:layout_marginStart="8dp"/>
 
             <Button
-                android:id="@+id/btnReadMore"
+                android:id="@+id/btnShowMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvRecipeDescription"
                 android:layout_centerHorizontal="true"
-                android:text="@string/btn_read_more"
+                android:text="@string/btn_show_more"
                 android:textColor="@color/colorPrimaryDark"
                 android:background="@color/btnReadMore"
                 android:layout_marginTop="10dp"
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignBottom="@id/btnReadMore"
+                android:layout_alignBottom="@id/btnShowMore"
                 android:background="@android:drawable/ic_menu_edit"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"/>
