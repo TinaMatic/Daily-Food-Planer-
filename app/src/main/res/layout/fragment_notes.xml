@@ -74,6 +74,17 @@
             android:layout_marginTop="28dp"
             android:elevation="1dp"
             android:src="@drawable/icn_add"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnDeleteNotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="28dp"
+            android:elevation="1dp"
+            android:visibility="invisible"
+            android:src="@drawable/delete"/>
     </FrameLayout>
 
     <TextView
@@ -92,10 +103,5 @@
         android:scrollbars="vertical"
         android:layout_marginTop="5dp"
         tools:listitem="@layout/row_note"/>
-<!--    <ListView-->
-<!--        android:id="@+id/notesListView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:requiresFadingEdge="vertical"/>-->
 
 </LinearLayout>

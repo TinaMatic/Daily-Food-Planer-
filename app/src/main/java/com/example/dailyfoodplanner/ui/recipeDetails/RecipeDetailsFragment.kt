@@ -9,6 +9,7 @@ import android.view.ViewGroup
 
 import com.example.dailyfoodplanner.R
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_recipe_details.*
 
 /**
  * A simple [Fragment] subclass.
@@ -24,4 +25,8 @@ class RecipeDetailsFragment : DaggerFragment() {
     }
 
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        textView.text = "Hello"
+    }
 }

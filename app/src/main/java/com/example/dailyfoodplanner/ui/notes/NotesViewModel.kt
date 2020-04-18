@@ -2,7 +2,9 @@ package com.example.dailyfoodplanner.ui.notes
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.dailyfoodplanner.data.FirebaseRepository
+import com.example.dailyfoodplanner.data.FirebaseRepositoryDailyPlaner
+import com.example.dailyfoodplanner.data.FirebaseRepositoryNotes
+import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,7 +15,7 @@ import javax.inject.Inject
 class NotesViewModel @Inject constructor(): ViewModel() {
 
     @Inject
-    lateinit var firebaseRepository: FirebaseRepository
+    lateinit var firebaseRepositoryNotes: FirebaseRepositoryNotes
 
     var notesLiveData: MutableLiveData<List<Notes>> = MutableLiveData()
     var notesError: MutableLiveData<Boolean> = MutableLiveData()
@@ -26,7 +28,7 @@ class NotesViewModel @Inject constructor(): ViewModel() {
 
 
         compositeDisposable.add(
-            firebaseRepository.loadAllNotes()
+            firebaseRepositoryNotes.loadAllNotes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({
@@ -44,7 +46,15 @@ class NotesViewModel @Inject constructor(): ViewModel() {
     }
 
     fun writeNote(note: Notes): Observable<Boolean>{
-        return firebaseRepository.writeNotes(note)
+        return firebaseRepositoryNotes.writeNotes(note)
+    }
+
+    fun deleteNote(listOfNotes: List<CheckedNotes>): Observable<Boolean>{
+        return firebaseRepositoryNotes.deleteNotes(listOfNotes)
+    }
+
+    fun editNote(note: Notes){
+        firebaseRepositoryNotes.editNote(note)
     }
 
     fun clear(){
