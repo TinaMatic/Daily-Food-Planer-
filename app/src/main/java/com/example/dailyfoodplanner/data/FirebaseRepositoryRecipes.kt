@@ -61,4 +61,57 @@ class FirebaseRepositoryRecipes @Inject constructor() {
             })
         }
     }
+
+    fun loadSingleRecipe(recipeId: String): Observable<Recipes>{
+        return Observable.create<Recipes> {emitter ->
+            recipesDatabase.child(recipeId).addListenerForSingleValueEvent(object: ValueEventListener{
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val id = dataSnapshot.key
+                    val title = dataSnapshot.child("title").value.toString()
+                    val description = dataSnapshot.child("description").value.toString()
+                    val ingredientsList = mutableListOf<String>()
+
+                    if(dataSnapshot.hasChild("ingredients")){
+                        dataSnapshot.child("ingredients").apply {
+                            children.forEach {
+                                ingredientsList.add(it.value.toString())
+                            }
+                        }
+                    }
+
+                    emitter.onNext(Recipes(id, title, description, ingredientsList))
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    emitter.onError(error.toException())
+                }
+
+            })
+        }
+    }
+
+    fun deleteRecipe(recipeId: String): Observable<Boolean>{
+        return Observable.create<Boolean> {emitter ->
+            recipesDatabase.child(recipeId).removeValue().addOnCompleteListener { task: Task<Void> ->
+                if(task.isSuccessful){
+                    emitter.onNext(true)
+                } else{
+                    emitter.onNext(false)
+                }
+            }
+        }
+    }
+
+    fun editRecipe(recipes: Recipes): Observable<Boolean>{
+        return Observable.create<Boolean> {emitter ->
+            recipesDatabase.child(recipes.recipeId!!).setValue(recipes).addOnCompleteListener { task: Task<Void> ->
+                if(task.isSuccessful){
+                    emitter.onNext(true)
+                } else{
+                    emitter.onNext(false)
+                }
+            }
+        }
+    }
 }

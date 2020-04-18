@@ -33,6 +33,14 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
         return firebaseRepositoryRecipes.writeRecipes(recipe)
     }
 
+    fun editRecipe(recipe: Recipes): Observable<Boolean>{
+        return firebaseRepositoryRecipes.editRecipe(recipe)
+    }
+
+    fun deleteRecipe(recipeId: String): Observable<Boolean>{
+        return firebaseRepositoryRecipes.deleteRecipe(recipeId)
+    }
+
     fun claer(){
         compositeDisposable.clear()
     }
