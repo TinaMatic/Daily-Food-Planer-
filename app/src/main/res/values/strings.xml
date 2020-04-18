@@ -34,4 +34,23 @@
     <string name="action_daily_planer">com.example.dailyfoodplanner.action.PLAN_DAILY</string>
     <string name="notification_description">Time to eat</string>
     <string name="daily_planer">Daily Planer</string>
+
+    <!--Recipes screen-->
+    <string name="exaplme_recipe_description">Lorem Ipsum is simply dummy text of the printing and
+        typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since
+        the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
+        specimen book. It has survived not only five centuries, but also the leap into electronic
+        typesetting, remaining essentially unchanged. It was popularised in the 1960s with the
+        release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+        publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+
+    <string name="btn_read_more">Read More</string>
+    <string name="recipe_search">Recipe to search for</string>
+    <string name="btn_search">Search</string>
+    <string name="recipe_title">Enter recipe title</string>
+    <string name="recipe_description">Enter recipe description</string>
+    <string name="recipe_ingredients">Enter ingredients separated by comma</string>
+    <string name="add_recipe_title">Add New Recipe</string>
+    <string name="add_recipe">Add</string>
+    <string name="cancel_recipe">Cancel</string>
 </resources>
