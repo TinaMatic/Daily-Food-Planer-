@@ -18,6 +18,8 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
 
     var allRecipesLiveData = MutableLiveData<List<Recipes>>()
 
+    var searchedRecipeLiveData = MutableLiveData<List<Recipes>>()
+
     private var compositeDisposable = CompositeDisposable()
 
     fun loadAllRecipes(){
@@ -39,6 +41,24 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
 
     fun deleteRecipe(recipeId: String): Observable<Boolean>{
         return firebaseRepositoryRecipes.deleteRecipe(recipeId)
+    }
+
+    fun searchRecipes(recipeTitle: String): Observable<List<Recipes>>{
+        val searchList = arrayListOf<Recipes>()
+
+        return Observable.create<List<Recipes>> { emitter ->
+            firebaseRepositoryRecipes.loadAllRecipes().subscribe ({ listRecipes ->
+                listRecipes.forEach {
+                    if (it.title.contains(recipeTitle)) {
+                        searchList.add(it)
+                    }
+                }
+                emitter.onNext(searchList)
+//            searchedRecipeLiveData.postValue(listRecipes)
+            },{})
+        }
+//        compositeDisposable.add()
+
     }
 
     fun claer(){

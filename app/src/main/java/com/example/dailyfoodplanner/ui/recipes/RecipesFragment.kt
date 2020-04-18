@@ -2,6 +2,8 @@ package com.example.dailyfoodplanner.ui.recipes
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +13,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.Recipes
+import com.example.dailyfoodplanner.ui.main.MainActivity
+import com.example.dailyfoodplanner.ui.recipeDetails.RecipeDetailsFragment
 import dagger.android.support.DaggerFragment
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.recipe_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_recipes.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
@@ -42,6 +50,30 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
         recipeViewModel = ViewModelProvider(this, viewModelFactory).get(RecipesViewModel::class.java)
 
         loadAllRecipes()
+
+
+        val buttonClickStream = createButtonClickSearch()
+        val textChangeStream = createTextChangeSearch()
+        val searchTextObservable = Observable.merge<String>(buttonClickStream, textChangeStream)
+
+        compositeDisposable.add(searchTextObservable
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                showProgressBar(true)
+            }
+            .observeOn(Schedulers.io())
+            .switchMap {
+                recipeViewModel.searchRecipes(it)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe ({
+                showProgressBar(false)
+                setRecipeAdapter(it)
+//                recipeViewModel.searchedRecipeLiveData.observe(this, Observer {
+//                    setRecipeAdapter(it)
+//                })
+            },{})
+        )
 
         btnAddRecipe.setOnClickListener {
             showAddDialog()
@@ -175,4 +207,66 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
         val alert = builder.create()
         alert.show()
     }
+
+    fun showProgressBar(show: Boolean){
+        if(show){
+            progressBarRecipe.visibility = View.VISIBLE
+        } else{
+            progressBarRecipe.visibility = View.INVISIBLE
+        }
+    }
+
+    fun createButtonClickSearch(): Observable<String>{
+        return Observable.create{emitter ->
+            btnSearch.setOnClickListener {
+                emitter.onNext(etSearchRecipe.text.toString())
+            }
+
+            emitter.setCancellable {
+                if(btnSearch != null){
+                    btnSearch.setOnClickListener(null)
+                }
+            }
+        }
+    }
+
+    fun createTextChangeSearch(): Observable<String>{
+        val textChangeObservable = Observable.create<String> {emitter ->
+            val textWatcher = object: TextWatcher{
+                override fun afterTextChanged(s: Editable?){
+                    if(etSearchRecipe.text.toString().isEmpty()){
+                        loadAllRecipes()
+                    }
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int)= Unit
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    s?.toString()?.let {
+                        emitter.onNext(it)
+                    }
+                }
+            }
+
+            etSearchRecipe.addTextChangedListener(textWatcher)
+
+            emitter.setCancellable {
+                if(etSearchRecipe != null){
+                    etSearchRecipe.removeTextChangedListener(textWatcher)
+                }
+            }
+        }
+
+       return textChangeObservable.filter {
+           it.length >= 2
+       }.debounce(1000, TimeUnit.MILLISECONDS)
+    }
+
+    override fun showMore(recipe: Recipes) {
+//        openRecipeDetails()
+
+//        (activity as MainActivity).supportFragmentManager.popBackStack()
+        (activity as MainActivity).replaceFragment(RecipeDetailsFragment(), R.id.frameLayoutRecipeDetails)
+    }
+
 }

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
+import com.example.dailyfoodplanner.model.Recipes
 import com.example.dailyfoodplanner.notification.AlarmScheduler
 import com.example.dailyfoodplanner.ui.main.MainActivity
 import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.DATE_FORMAT
@@ -36,6 +37,8 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
     private lateinit var homeViewModel: HomeViewModel
 
     private lateinit var adapter: ArrayAdapter<String>
+
+    private var listOfRecipes = arrayListOf("None")
 
     var compositeDisposable = CompositeDisposable()
 
@@ -74,8 +77,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         addTextChangeListner()
 
-        val items = listOf("Material", "Design", "None")
-        adapter = ArrayAdapter(requireContext(), R.layout.list_recipes, items)
+        adapter = ArrayAdapter(requireContext(), R.layout.list_recipes, listOfRecipes)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinnerBreakfast.adapter = adapter
@@ -109,6 +111,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
     }
 
     private fun initDate(dailyPlanId: String?){
+        loadAllRecipes()
         //show correct button
         if(dailyPlanId.isNullOrEmpty()){
             btnAdd.visibility = View.VISIBLE
@@ -140,12 +143,22 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         etTimeDinner.onFocusChangeListener = this
     }
 
+    private fun loadAllRecipes(){
+        homeViewModel.loadAllRecipes()
+
+        homeViewModel.recipeLiveData.observe(this, androidx.lifecycle.Observer {listRecipes->
+            listRecipes.forEach {
+                listOfRecipes.add(it.title)
+            }
+        })
+    }
+
     private fun openDatePicker(viewId: Int){
         val editText = view?.findViewById<EditText>(viewId)
 
-        var year: Int? = null
-        var month: Int? = null
-        var day: Int? = null
+        val year: Int
+        val month: Int
+        val day: Int
 
         if(editDate != null){
             year = editDate?.substring(6)!!.toInt()

@@ -37,7 +37,9 @@
         android:id="@+id/navigation_recipes"
         android:name="com.example.dailyfoodplanner.ui.recipes.RecipesFragment"
         android:label="@string/title_recipes"
-        tools:layout="@layout/fragment_recipes" />
+        tools:layout="@layout/fragment_recipes" >
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notes"
