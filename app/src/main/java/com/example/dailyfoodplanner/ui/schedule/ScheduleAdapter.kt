@@ -36,6 +36,7 @@ class ScheduleAdapter (val context: Context, val listDailyPlansForMonth: ArrayLi
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+
         fun bindView(dailyPlan: DailyPlaner, position: Int){
             val dayOfWeekNum = convertDateToCalendarObject(dailyPlan.date).get(Calendar.DAY_OF_WEEK)
             val dayOfWeek = getDayOfWeek(dayOfWeekNum)

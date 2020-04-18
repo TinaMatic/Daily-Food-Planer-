@@ -38,17 +38,12 @@ class ScheduleViewModel @Inject constructor(): ViewModel() {
             }))
     }
 
-//    fun editDailyPlan(dailyPlaner: DailyPlaner){
-//        firebaseRepositoryDailyPlaner.editDailyPlan(dailyPlaner)
-//    }
-
     fun deleteDilyPlan(dailyPlanId: String): Observable<Boolean>{
         return firebaseRepositoryDailyPlaner.deleteDailyPlan(dailyPlanId)
     }
 
 
     fun clear(){
-        firebaseRepositoryDailyPlaner.compositeDisposable.clear()
         compositeDisposable.clear()
         firebaseRepositoryDailyPlaner.clean()
     }
