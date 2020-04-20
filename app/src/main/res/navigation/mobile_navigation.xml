@@ -37,8 +37,11 @@
         android:id="@+id/navigation_recipes"
         android:name="com.example.dailyfoodplanner.ui.recipes.RecipesFragment"
         android:label="@string/title_recipes"
-        tools:layout="@layout/fragment_recipes" >
+        tools:layout="@layout/fragment_recipes">
 
+        <action
+            android:id="@+id/openRecipeDetails"
+            app:destination="@id/navigation_recipe_details"/>
     </fragment>
 
     <fragment
@@ -46,4 +49,18 @@
         android:name="com.example.dailyfoodplanner.ui.notes.NotesFragment"
         android:label="@string/title_notes"
         tools:layout="@layout/fragment_notes" />
+
+    <fragment
+        android:id="@+id/navigation_recipe_details"
+        android:name="com.example.dailyfoodplanner.ui.recipeDetails.RecipeDetailsFragment"
+        android:label="@string/title_recipe_details"
+        tools:layout="@layout/fragment_recipe_details">
+
+        <argument
+            android:name="recipeId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+    </fragment>
+
 </navigation>
