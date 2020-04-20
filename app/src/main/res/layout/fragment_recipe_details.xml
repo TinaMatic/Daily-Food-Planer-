@@ -1,15 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.recipeDetails.RecipeDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+   <TextView
+       android:id="@+id/tvRecipeTitle"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true"
+       android:text="Title"
+       android:layout_marginTop="10dp"
+       android:textSize="20sp"
+       android:textStyle="bold|italic"
+       android:textColor="@color/colorPrimaryDark"
+       android:transitionName="recipeTitle"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tvRecipeDescriptionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRecipeTitle"
+        android:text="@string/recipe_details_description"
+        android:textSize="17sp"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold|italic"
+        android:layout_marginStart="10dp"/>
+
+    <TextView
+        android:id="@+id/tvRecipeDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRecipeDescriptionLabel"
+        android:text="Recipe Description"
+        android:textSize="15sp"
+        android:textColor="@color/colorAccent"
+        android:inputType="textMultiLine"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:transitionName="recipeDescription"/>
+
+    <TextView
+        android:id="@+id/tvIngredientsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRecipeDescription"
+        android:text="@string/recipe_details_ingredients"
+        android:textSize="17sp"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold|italic"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/tvRecipeIngredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvIngredientsLabel"
+        android:text="Recipe Ingredients"
+        android:textSize="15sp"
+        android:textColor="@color/colorAccent"
+        android:inputType="textMultiLine"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"/>
+
+</RelativeLayout>

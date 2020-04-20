@@ -75,7 +75,7 @@ class FirebaseRepositoryRecipes @Inject constructor() {
                     if(dataSnapshot.hasChild("ingredients")){
                         dataSnapshot.child("ingredients").apply {
                             children.forEach {
-                                ingredientsList.add(it.value.toString())
+                                ingredientsList.add(it.value.toString().trim())
                             }
                         }
                     }

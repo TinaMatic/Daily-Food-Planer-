@@ -18,8 +18,6 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
 
     var allRecipesLiveData = MutableLiveData<List<Recipes>>()
 
-    var searchedRecipeLiveData = MutableLiveData<List<Recipes>>()
-
     private var compositeDisposable = CompositeDisposable()
 
     fun loadAllRecipes(){
@@ -54,11 +52,8 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
                     }
                 }
                 emitter.onNext(searchList)
-//            searchedRecipeLiveData.postValue(listRecipes)
             },{})
         }
-//        compositeDisposable.add()
-
     }
 
     fun claer(){
