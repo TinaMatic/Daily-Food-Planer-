@@ -17,9 +17,9 @@
             app:nullable="true"
             android:defaultValue="@null"/>
 
-<!--        <action-->
-<!--            android:id="@+id/openSchedule"-->
-<!--            app:destination="@id/navigation_schedule"/>-->
+        <action
+            android:id="@+id/openSchedule"
+            app:destination="@id/navigation_schedule"/>
 
     </fragment>
 
@@ -62,4 +62,5 @@
             app:nullable="true"
             android:defaultValue="@null"/>
     </fragment>
+
 </navigation>
