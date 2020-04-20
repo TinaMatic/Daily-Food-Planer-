@@ -10,11 +10,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.Recipes
-import com.example.dailyfoodplanner.ui.main.MainActivity
-import com.example.dailyfoodplanner.ui.recipeDetails.RecipeDetailsFragment
+
 import dagger.android.support.DaggerFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,6 +23,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.recipe_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_recipes.*
+import kotlinx.android.synthetic.main.item_recipe.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -51,7 +53,6 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
 
         loadAllRecipes()
 
-
         val buttonClickStream = createButtonClickSearch()
         val textChangeStream = createTextChangeSearch()
         val searchTextObservable = Observable.merge<String>(buttonClickStream, textChangeStream)
@@ -69,9 +70,6 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
             .subscribe ({
                 showProgressBar(false)
                 setRecipeAdapter(it)
-//                recipeViewModel.searchedRecipeLiveData.observe(this, Observer {
-//                    setRecipeAdapter(it)
-//                })
             },{})
         )
 
@@ -263,10 +261,10 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
     }
 
     override fun showMore(recipe: Recipes) {
-//        openRecipeDetails()
-
-//        (activity as MainActivity).supportFragmentManager.popBackStack()
-        (activity as MainActivity).replaceFragment(RecipeDetailsFragment(), R.id.frameLayoutRecipeDetails)
+        val extras = FragmentNavigatorExtras (tvRecipeTitle to "recipeTitle",
+            tvRecipeDescription to "recipeDescription")
+        val direction = RecipesFragmentDirections.openRecipeDetails(recipe.recipeId)
+        findNavController().navigate(direction, extras)
     }
 
 }

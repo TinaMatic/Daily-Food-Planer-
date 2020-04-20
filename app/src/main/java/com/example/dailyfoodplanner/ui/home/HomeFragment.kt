@@ -91,7 +91,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
                 editDailyPlan(dailyPlanId!!)
                 cleanAllFields()
                 etTimeDinner.clearFocus()
-                findNavController().navigate(R.id.openSchedule)
+//                findNavController().navigate(R.id.openSchedule)
             }
         })
 
