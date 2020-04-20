@@ -49,6 +49,22 @@ class MainActivity : AppCompatActivity() {
             } else{
                 navView.visibility = View.VISIBLE
             }
+
+        }
+    }
+
+    fun displayHomeButton(){
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+    }
+
+    fun setActionBarTitle(title: String){
+        supportActionBar?.title = title
+    }
+
+    fun shouldEnableBottomNavigation(enable: Boolean){
+        for(i in 0 until nav_view.menu.size()){
+            nav_view.menu.getItem(i).isEnabled = enable
         }
     }
 

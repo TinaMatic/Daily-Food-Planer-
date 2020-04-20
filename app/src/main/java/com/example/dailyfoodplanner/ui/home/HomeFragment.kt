@@ -58,6 +58,8 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
     private var editTimeDinner: String? = null
 
+    var dailyPlanId: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,7 +74,8 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
-        val dailyPlanId = HomeFragmentArgs.fromBundle(arguments!!).dailyPlanId
+        dailyPlanId = HomeFragmentArgs.fromBundle(arguments!!).dailyPlanId
+
         initDate(dailyPlanId)
 
         addTextChangeListner()
@@ -108,6 +111,8 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         super.onDestroyView()
         compositeDisposable.clear()
         homeViewModel.claer()
+
+        (activity as MainActivity).shouldEnableBottomNavigation(true)
     }
 
     private fun initDate(dailyPlanId: String?){
@@ -117,7 +122,12 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             btnAdd.visibility = View.VISIBLE
             btnEdit.visibility = View.INVISIBLE
         } else {
+            (activity as MainActivity).displayHomeButton()
+            (activity as MainActivity).setActionBarTitle(getString(R.string.title_schedule_edit))
+            (activity as MainActivity).shouldEnableBottomNavigation(false)
+
             loadSingleDailyPlan(dailyPlanId)
+
             btnAdd.visibility = View.INVISIBLE
             btnEdit.visibility = View.VISIBLE
         }
