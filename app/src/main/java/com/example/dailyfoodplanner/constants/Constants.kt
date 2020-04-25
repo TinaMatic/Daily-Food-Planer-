@@ -3,7 +3,12 @@ package com.example.dailyfoodplanner.constants
 class Constants {
     companion object{
         const val KEY_ID = "id"
-        const val KEY_DAILY_PLAN = "dailyPlan"
-        const val DAILY_PLANER_REQUEST_CODE = 2020
+        const val MEAL_TYPE = "mealType"
+
+        const val BREAKFAST_REQUEST_CODE = 0
+        const val SNACK1_REQUEST_CODE = 1
+        const val LUNCH_REQUEST_CODE = 2
+        const val SNACK2_REQUEST_CODE = 3
+        const val DINNER_REQUEST_CODE = 4
     }
 }

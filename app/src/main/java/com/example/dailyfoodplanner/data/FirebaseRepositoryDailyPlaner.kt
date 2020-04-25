@@ -3,6 +3,7 @@ package com.example.dailyfoodplanner.data
 import android.util.Log
 import com.example.dailyfoodplanner.model.DailyPlaner
 import com.example.dailyfoodplanner.model.Notes
+import com.example.dailyfoodplanner.notification.AlarmScheduler
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import io.reactivex.Observable
@@ -15,19 +16,19 @@ class FirebaseRepositoryDailyPlaner @Inject constructor() {
 
     var compositeDisposable = CompositeDisposable()
 
-    fun writeDailyPlaner(dailyPlaner: DailyPlaner): Observable<Boolean>{
+    fun writeDailyPlaner(dailyPlaner: DailyPlaner): Observable<Pair<Boolean, DailyPlaner?>>{
         val messageId = dailyPlanerDatabase.push().key
 
-        return Observable.create<Boolean> {emitter ->
+        return Observable.create<Pair<Boolean, DailyPlaner?>> {emitter ->
             val tempDailyPlanerObject = DailyPlaner(messageId!!, dailyPlaner.date, dailyPlaner.timeBreakfast, dailyPlaner.recipeBreakfast,
                 dailyPlaner.timeSnack1, dailyPlaner.recipeSnack1, dailyPlaner.timeLunch, dailyPlaner.recipeLunch,
                 dailyPlaner.timeSnack2, dailyPlaner.recipeSnack2, dailyPlaner.timeDinner, dailyPlaner.recipeDinner)
 
             dailyPlanerDatabase.child(messageId).setValue(tempDailyPlanerObject).addOnCompleteListener {task: Task<Void> ->
                 if (task.isSuccessful){
-                    emitter.onNext(true)
+                    emitter.onNext(Pair(true, tempDailyPlanerObject))
                 }else{
-                    emitter.onNext(false)
+                    emitter.onNext(Pair(false, null))
                 }
             }
         }

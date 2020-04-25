@@ -3,6 +3,7 @@ package com.example.dailyfoodplanner
 import com.example.dailyfoodplanner.di.component.ApplicationComponent
 import com.example.dailyfoodplanner.di.component.DaggerApplicationComponent
 import com.example.dailyfoodplanner.di.module.ApplicationModule
+import com.example.dailyfoodplanner.notification.NotificationHelper
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 
@@ -18,5 +19,11 @@ class DailyFoodPlannerApplication: DaggerApplication() {
         appComponent.inject(this)
 
         return appComponent
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        NotificationHelper.createNotificationChanel(this)
     }
 }
