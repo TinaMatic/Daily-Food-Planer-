@@ -1,8 +1,11 @@
 package com.example.dailyfoodplanner.ui.main
 
+import android.app.Activity
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -15,12 +18,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.base.ViewModelFactory
+import com.example.dailyfoodplanner.notification.AlarmReceiver
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private lateinit var alarmReceiver: AlarmReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +57,17 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+//        applicationContext.registerReceiver(AlarmReceiver(), IntentFilter())
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 
     fun displayHomeButton(){
@@ -66,6 +83,11 @@ class MainActivity : AppCompatActivity() {
         for(i in 0 until nav_view.menu.size()){
             nav_view.menu.getItem(i).isEnabled = enable
         }
+    }
+
+    fun hideKeyboard(view: View){
+        val inputManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onSupportNavigateUp(): Boolean {

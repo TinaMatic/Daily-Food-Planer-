@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rounded_edittext"
-                    android:inputType="date|textMultiLine"
+                    android:inputType="date"
                     android:padding="10dp" />
 
             </com.google.android.material.textfield.TextInputLayout>

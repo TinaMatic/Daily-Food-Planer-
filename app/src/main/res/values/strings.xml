@@ -61,4 +61,15 @@
     <!--Recipe Details screen-->
     <string name="recipe_details_description">Description:</string>
     <string name="recipe_details_ingredients">Ingredients:</string>
+
+    <!--Notifications-->
+    <string-array name="days">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
 </resources>
