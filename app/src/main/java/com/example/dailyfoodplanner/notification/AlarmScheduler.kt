@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.constants.Constants.Companion.BREAKFAST_REQUEST_CODE
+import com.example.dailyfoodplanner.constants.Constants.Companion.DAILY_RECEIVER_REQUEST_CODE
 import com.example.dailyfoodplanner.constants.Constants.Companion.DINNER_REQUEST_CODE
 import com.example.dailyfoodplanner.constants.Constants.Companion.KEY_ID
 import com.example.dailyfoodplanner.constants.Constants.Companion.LUNCH_REQUEST_CODE
@@ -71,9 +72,6 @@ object AlarmScheduler {
         if (shouldNotifyToday(dayOfWeek, today, dateTimeAlarm)) {
             //schedule for today
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, dateTimeAlarm.timeInMillis, alarmIntent)
-        } else{
-            //schedule the alarm for future days
-//            alarmManager.set(AlarmManager.RTC_WAKEUP, dateTimeAlarm.timeInMillis, alarmIntent)
         }
     }
 
@@ -117,5 +115,24 @@ object AlarmScheduler {
         alarmManager.cancel(alarmIntentSnack2)
         alarmManager.cancel(alarmIntentDinner)
 
+    }
+
+    //schedules the receiver to run at the beginning of each day
+    fun scheduleDailyCheckup(context: Context){
+        //creating pending intent
+        val intent = Intent(context.applicationContext, DailyReceiver::class.java)
+        intent.action = context.getString(R.string.action_notify_daily_receiver)
+
+        val alarmIntent = PendingIntent.getBroadcast(context.applicationContext, DAILY_RECEIVER_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        //get the time when to fire the receiver
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = System.currentTimeMillis()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+
+        //create alarm manager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, alarmIntent)
     }
 }

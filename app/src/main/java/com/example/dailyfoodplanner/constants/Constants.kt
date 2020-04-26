@@ -10,5 +10,6 @@ class Constants {
         const val LUNCH_REQUEST_CODE = 2
         const val SNACK2_REQUEST_CODE = 3
         const val DINNER_REQUEST_CODE = 4
+        const val DAILY_RECEIVER_REQUEST_CODE = 100
     }
 }

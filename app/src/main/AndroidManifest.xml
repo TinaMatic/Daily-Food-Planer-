@@ -34,6 +34,13 @@
             </intent-filter>
         </receiver>
 
+        <!--For receiving the broadcast that will check if there are any alarms to be scheduled-->
+        <receiver android:name=".notification.DailyReceiver"
+            android:enabled="true"
+            android:exported="false">
+
+        </receiver>
+
         <receiver android:name=".notification.BootReceiver"
             android:enabled="true">
             <intent-filter>
