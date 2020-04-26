@@ -36,7 +36,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             },{}))
     }
 
-    fun writeDailyPlaner(dailyPlaner: DailyPlaner): Observable<Boolean>{
+    fun writeDailyPlaner(dailyPlaner: DailyPlaner): Observable<Pair<Boolean, DailyPlaner?>>{
         return firebaseRepositoryDailyPlaner.writeDailyPlaner(dailyPlaner)
     }
 

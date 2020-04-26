@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dailyfoodplanner">
 
+    <!-- Need to receive a broadcast when the system reboots -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".DailyFoodPlannerApplication"
         android:allowBackup="true"
@@ -20,10 +25,28 @@
             </intent-filter>
         </activity>
 
-
+        <!-- For retrieving the broadcast sent by the system when the alarm is triggered -->
         <receiver android:name=".notification.AlarmReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.dailyfoodplanner.action.DAILY_PLANER"/>
+            </intent-filter>
+        </receiver>
+
+        <!--For receiving the broadcast that will check if there are any alarms to be scheduled-->
+        <receiver android:name=".notification.DailyReceiver"
+            android:enabled="true"
+            android:exported="false">
+
+        </receiver>
+
+        <receiver android:name=".notification.BootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
 
     </application>
 

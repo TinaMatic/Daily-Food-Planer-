@@ -33,7 +33,7 @@
     <!--Notifications-->
     <string name="notification_title">Daily Food Plan Notification</string>
     <string name="action_notify_daily_planer">com.example.dailyfoodplanner.action.DAILY_PLANER</string>
-    <string name="action_daily_planer">com.example.dailyfoodplanner.action.PLAN_DAILY</string>
+    <string name="action_notify_daily_receiver">com.example.dailyfoodplanner.action.DAILY_RECEIVER</string>
     <string name="notification_description">Time to eat</string>
     <string name="daily_planer">Daily Planer</string>
 
@@ -61,4 +61,15 @@
     <!--Recipe Details screen-->
     <string name="recipe_details_description">Description:</string>
     <string name="recipe_details_ingredients">Ingredients:</string>
+
+    <!--Notifications-->
+    <string-array name="days">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
 </resources>

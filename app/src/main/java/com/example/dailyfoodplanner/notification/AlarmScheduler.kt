@@ -5,71 +5,134 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.dailyfoodplanner.R
+import com.example.dailyfoodplanner.constants.Constants.Companion.BREAKFAST_REQUEST_CODE
+import com.example.dailyfoodplanner.constants.Constants.Companion.DAILY_RECEIVER_REQUEST_CODE
+import com.example.dailyfoodplanner.constants.Constants.Companion.DINNER_REQUEST_CODE
 import com.example.dailyfoodplanner.constants.Constants.Companion.KEY_ID
+import com.example.dailyfoodplanner.constants.Constants.Companion.LUNCH_REQUEST_CODE
+import com.example.dailyfoodplanner.constants.Constants.Companion.MEAL_TYPE
+import com.example.dailyfoodplanner.constants.Constants.Companion.SNACK1_REQUEST_CODE
+import com.example.dailyfoodplanner.constants.Constants.Companion.SNACK2_REQUEST_CODE
 import com.example.dailyfoodplanner.model.DailyPlaner
+import com.example.dailyfoodplanner.utils.DateTimeUtils
 import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.getHourForMeal
 import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.getMinuteForMeail
 import java.util.*
 
-class AlarmScheduler {
+object AlarmScheduler {
 
-    companion object{
+    //schedules all the alarms for DailyPlaner
+    fun scheduleAlarmForDailyPlaner(context: Context, dailyPlaner: DailyPlaner){
 
+        //get the AlarmManager reference
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-//        fun createPendingIntent(context: Context, dailyPlaner: DailyPlaner, day: String?): PendingIntent?{
-//            val intent = Intent(context.applicationContext, AlarmReceiver::class.java).apply {
-//                action = context.getString(R.string.action_notify_daily_planer)
-//                type = "${dailyPlaner.date}"
-//                putExtra(KEY_ID, dailyPlaner.id)
-//            }
-//
-//            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//        }
+        //Schedule the alarm based on the days
+        val dayOfWeek = DateTimeUtils.convertDateToCalendarObject(dailyPlaner.date).get(Calendar.DAY_OF_WEEK)
 
+        //get the PendingIntent for the alarm
+        val alarmIntentBreakfast = createPendingIntent(context, dailyPlaner, "breakfast", BREAKFAST_REQUEST_CODE)
+        val alarmIntentSnack1 = createPendingIntent(context, dailyPlaner, "snack1", SNACK1_REQUEST_CODE)
+        val alarmIntentLunch = createPendingIntent(context, dailyPlaner, "lunch", LUNCH_REQUEST_CODE)
+        val alarmIntentSnack2 = createPendingIntent(context, dailyPlaner, "snack2", SNACK2_REQUEST_CODE)
+        val alarmIntentDinner = createPendingIntent(context, dailyPlaner, "dinner", DINNER_REQUEST_CODE)
 
-        fun scheduleAlarm(context: Context, dailyPlaner: DailyPlaner, typeOfMeal: String, dayOfWeek: Int){
-            val dayOfMonth = dailyPlaner.date.substring(0,2).toInt()
-            val month = dailyPlaner.date.substring(3,5).toInt()
-            val hour = getHourForMeal(dailyPlaner, typeOfMeal)
-            val minute = getMinuteForMeail(dailyPlaner, typeOfMeal)
+        //schedule the alarm
+        scheduleAlarm(dailyPlaner, "breakfast", dayOfWeek, alarmIntentBreakfast, alarmManager)
+        scheduleAlarm(dailyPlaner, "snack1", dayOfWeek, alarmIntentSnack1, alarmManager)
+        scheduleAlarm(dailyPlaner, "lunch", dayOfWeek, alarmIntentLunch, alarmManager)
+        scheduleAlarm(dailyPlaner, "snack2", dayOfWeek, alarmIntentSnack2, alarmManager)
+        scheduleAlarm(dailyPlaner, "dinner", dayOfWeek, alarmIntentDinner, alarmManager)
 
-            //set up the time to schedule the alarm
-            val dateTimeAlarm = Calendar.getInstance(Locale.getDefault())
-            dateTimeAlarm.timeInMillis = System.currentTimeMillis()
-            dateTimeAlarm.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            dateTimeAlarm.set(Calendar.MONTH, month)
-            dateTimeAlarm.set(Calendar.HOUR_OF_DAY, hour)
-            dateTimeAlarm.set(Calendar.MINUTE, minute)
-            dateTimeAlarm.set(Calendar.SECOND, 0)
-            dateTimeAlarm.set(Calendar.MILLISECOND, 0)
+    }
 
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, AlarmReceiver::class.java)
-            val alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+    //schedules a single alarm
+    private fun scheduleAlarm(dailyPlaner: DailyPlaner, typeOfMeal: String, dayOfWeek: Int,
+                      alarmIntent: PendingIntent?, alarmManager: AlarmManager) {
 
-            //compare the dateTimeToAlarm to today
-            val today = Calendar.getInstance(Locale.getDefault())
-            if(shouldNotifyToday(dayOfWeek, today, dateTimeAlarm)){
-                //schedule for today
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, dateTimeAlarm.timeInMillis, alarmIntent)
-                return
-            }
+        val dayOfMonth = dailyPlaner.date.substring(0, 2).toInt()
+        val month = dailyPlaner.date.substring(3, 5).toInt()
+        val year = dailyPlaner.date.substring(6).toInt()
+        val hour = getHourForMeal(dailyPlaner, typeOfMeal)
+        val minute = getMinuteForMeail(dailyPlaner, typeOfMeal)
 
+        //set up the time to schedule the alarm
+        val dateTimeAlarm = Calendar.getInstance()
+        dateTimeAlarm.set(Calendar.YEAR, year)
+        dateTimeAlarm.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        dateTimeAlarm.set(Calendar.MONTH, month - 1)
+        dateTimeAlarm.set(Calendar.HOUR_OF_DAY, hour)
+        dateTimeAlarm.set(Calendar.MINUTE, minute)
+        dateTimeAlarm.set(Calendar.SECOND, 0)
+        dateTimeAlarm.set(Calendar.MILLISECOND, 0)
+        dateTimeAlarm.set(Calendar.DAY_OF_WEEK, dayOfWeek)
+
+        //compare the dateTimeToAlarm to today
+        val today = Calendar.getInstance(Locale.getDefault())
+        if (shouldNotifyToday(dayOfWeek, today, dateTimeAlarm)) {
+            //schedule for today
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, dateTimeAlarm.timeInMillis, alarmIntent)
         }
+    }
+
+    //creates a PendingIntent for the Alarm
+    private fun createPendingIntent(context: Context, dailyPlaner: DailyPlaner, mealType: String?, requestCode: Int): PendingIntent?{
+        val intent = Intent(context.applicationContext, AlarmReceiver::class.java)
+        intent.action = context.getString(R.string.action_notify_daily_planer)
+        intent.putExtra(KEY_ID, dailyPlaner.id)
+        intent.putExtra(MEAL_TYPE, mealType)
+
+        return PendingIntent.getBroadcast(context.applicationContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
 
 
-        private fun shouldNotifyToday(dayOfWeek: Int, today: Calendar, dateTimeToAlarm: Calendar): Boolean{
-            return dayOfWeek == today.get(Calendar.DAY_OF_WEEK) &&
-                    today.get(Calendar.HOUR_OF_DAY) <= dateTimeToAlarm.get(Calendar.HOUR_OF_DAY) &&
-                    today.get(Calendar.MINUTE) <= dateTimeToAlarm.get(Calendar.MINUTE)
-        }
+    //determines if the alarm should be scheduled today
+    private fun shouldNotifyToday(dayOfWeek: Int, today: Calendar, dateTimeToAlarm: Calendar): Boolean {
+        return dayOfWeek == today.get(Calendar.DAY_OF_WEEK) &&
+                today.get(Calendar.HOUR_OF_DAY) <= dateTimeToAlarm.get(Calendar.HOUR_OF_DAY) &&
+                today.get(Calendar.MINUTE) <= dateTimeToAlarm.get(Calendar.MINUTE)
+    }
 
-        fun cancelAlarm(context: Context){
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, AlarmReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-            alarmManager.cancel(pendingIntent)
-        }
 
+    //removes the notification if it was previously scheduled
+    fun removeAlarmsForDailyPlaner(context: Context, dailyPlanerId: String){
+        val intent = Intent(context.applicationContext, AlarmReceiver::class.java)
+        intent.action = context.getString(R.string.action_notify_daily_planer)
+        intent.putExtra(KEY_ID, dailyPlanerId)
+
+        //schedule the alarms based on the days
+        val alarmIntentBreakfast = PendingIntent.getBroadcast(context, BREAKFAST_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmIntentSnack1 = PendingIntent.getBroadcast(context, SNACK1_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmIntentLunch = PendingIntent.getBroadcast(context, LUNCH_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmIntentSnack2 = PendingIntent.getBroadcast(context, SNACK2_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmIntentDinner = PendingIntent.getBroadcast(context, DINNER_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(alarmIntentBreakfast)
+        alarmManager.cancel(alarmIntentSnack1)
+        alarmManager.cancel(alarmIntentLunch)
+        alarmManager.cancel(alarmIntentSnack2)
+        alarmManager.cancel(alarmIntentDinner)
+
+    }
+
+    //schedules the receiver to run at the beginning of each day
+    fun scheduleDailyCheckup(context: Context){
+        //creating pending intent
+        val intent = Intent(context.applicationContext, DailyReceiver::class.java)
+        intent.action = context.getString(R.string.action_notify_daily_receiver)
+
+        val alarmIntent = PendingIntent.getBroadcast(context.applicationContext, DAILY_RECEIVER_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        //get the time when to fire the receiver
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = System.currentTimeMillis()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+
+        //create alarm manager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, alarmIntent)
     }
 }

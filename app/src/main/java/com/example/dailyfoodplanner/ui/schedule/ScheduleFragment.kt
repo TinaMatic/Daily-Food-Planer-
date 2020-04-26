@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
+import com.example.dailyfoodplanner.notification.AlarmScheduler
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_schedule.*
@@ -107,6 +108,7 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
                         scheduleAdapter.listDailyPlansForMonth.removeAt(position)
                         scheduleAdapter.notifyItemRemoved(position)
                         scheduleAdapter.notifyDataSetChanged()
+                        AlarmScheduler.removeAlarmsForDailyPlaner(context!!, dailyPlanId)
                     } else {
                         Toast.makeText(context, "Something went wrong when deleting", Toast.LENGTH_SHORT).show()
                     }

@@ -2,8 +2,8 @@ package com.example.dailyfoodplanner.ui.home
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +11,12 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
-import com.example.dailyfoodplanner.model.Recipes
 import com.example.dailyfoodplanner.notification.AlarmScheduler
 import com.example.dailyfoodplanner.ui.main.MainActivity
 import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.DATE_FORMAT
 import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.TIME_FORMAT
-import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.convertDateToCalendarObject
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import dagger.android.support.DaggerFragment
@@ -42,9 +39,11 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
     var compositeDisposable = CompositeDisposable()
 
-    private val cal = Calendar.getInstance()
+    private var datePicker: DatePickerDialog? = null
 
-    private var dayOfWeek: Int? = null
+    private var timePicker: TimePickerDialog? = null
+
+    private val cal = Calendar.getInstance()
 
     private var editDate: String? = null
 
@@ -66,7 +65,6 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,23 +76,12 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         initDate(dailyPlanId)
 
-        addTextChangeListner()
-
-        adapter = ArrayAdapter(requireContext(), R.layout.list_recipes, listOfRecipes)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        spinnerBreakfast.adapter = adapter
-        spinnerSnack1.adapter = adapter
-        spinnerLunch.adapter = adapter
-        spinnerSnack2.adapter = adapter
-        spinnerDinner.adapter = adapter
+        addTextChangeListener()
 
         compositeDisposable.add(btnEdit.clicks().subscribe {
             if(ifAllDataIsFilled()){
                 editDailyPlan(dailyPlanId!!)
-                cleanAllFields()
                 etTimeDinner.clearFocus()
-//                findNavController().navigate(R.id.openSchedule)
             }
         })
 
@@ -113,10 +100,21 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         homeViewModel.claer()
 
         (activity as MainActivity).shouldEnableBottomNavigation(true)
+
     }
 
     private fun initDate(dailyPlanId: String?){
         loadAllRecipes()
+
+        adapter = ArrayAdapter(requireContext(), R.layout.list_recipes, listOfRecipes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinnerBreakfast.adapter = adapter
+        spinnerSnack1.adapter = adapter
+        spinnerLunch.adapter = adapter
+        spinnerSnack2.adapter = adapter
+        spinnerDinner.adapter = adapter
+
         //show correct button
         if(dailyPlanId.isNullOrEmpty()){
             btnAdd.visibility = View.VISIBLE
@@ -165,46 +163,59 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
     private fun openDatePicker(viewId: Int){
         val editText = view?.findViewById<EditText>(viewId)
+        (activity as MainActivity).hideKeyboard(editText as View)
 
-        val year: Int
-        val month: Int
-        val day: Int
+        val yearDisplay: Int
+        val monthDisplay: Int
+        val dayDisplay: Int
 
         if(editDate != null){
-            year = editDate?.substring(6)!!.toInt()
-            month = editDate?.substring(3,5)!!.toInt()
-            day = editDate?.substring(0,2)!!.toInt()
+            yearDisplay = editDate?.substring(6)!!.toInt()
+            monthDisplay = editDate?.substring(3,5)!!.toInt()
+            dayDisplay = editDate?.substring(0,2)!!.toInt()
         } else{
-            year = cal.get(Calendar.YEAR)
-            month = cal.get(Calendar.MONTH)
-            day = cal.get(Calendar.DAY_OF_MONTH)
+            yearDisplay = cal.get(Calendar.YEAR)
+            monthDisplay = cal.get(Calendar.MONTH)
+            dayDisplay = cal.get(Calendar.DAY_OF_MONTH)
         }
 
-        val datePicker = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+        datePicker = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
 
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, month)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            editText?.setText(SimpleDateFormat(DATE_FORMAT).format(cal.time))
-            dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
-        }, year, month, day)
-        datePicker.show()
+            editText.setText(SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(cal.time))
+        }, yearDisplay, monthDisplay, dayDisplay)
+
+        datePicker?.show()
+    }
+
+    private fun closeDatePicker(){
+        if(datePicker != null){
+            datePicker?.dismiss()
+        }
     }
 
     private fun openTimePicker(viewId: Int){
         val editText = view?.findViewById<EditText>(viewId)
 
-        val hour = getHour(viewId)
-        val minute = getMinute(viewId)
+        val hourDisplay = getHour(viewId)
+        val minuteDisplay = getMinute(viewId)
 
-        val timePicker = TimePickerDialog(requireContext(), TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+        timePicker = TimePickerDialog(requireContext(), TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
             cal.set(Calendar.MINUTE, minute)
-            editText?.setText(SimpleDateFormat(TIME_FORMAT).format(cal.time))
-        }, hour, minute, true)
+            editText?.setText(SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(cal.time))
+        }, hourDisplay, minuteDisplay, true)
 
-        timePicker.show()
+        timePicker?.show()
+    }
+
+    private fun closeTimePicker(){
+        if(timePicker != null){
+            timePicker?.dismiss()
+        }
     }
 
     private fun getHour(viewId: Int): Int{
@@ -259,10 +270,11 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             etTimeSnack1.text.toString(), spinnerSnack1.selectedItem.toString(), etTimeLunch.text.toString(), spinnerLunch.selectedItem.toString(),
             etTimeSnack2.text.toString(), spinnerSnack2.selectedItem.toString(), etTimeDinner.text.toString(), spinnerDinner.selectedItem.toString())
 
-        compositeDisposable.add(homeViewModel.writeDailyPlaner(dailyPlaner).subscribe {
-            if (it){
+        compositeDisposable.add(homeViewModel.writeDailyPlaner(dailyPlaner).subscribe {(isSuccessfull, dailyPlan) ->
+            if (isSuccessfull){
                 Toast.makeText(context, "Daily plan was successfully added", Toast.LENGTH_SHORT).show()
-                AlarmScheduler.scheduleAlarm(requireContext(), dailyPlaner, "breakfast", dayOfWeek!!)
+                AlarmScheduler.scheduleAlarmForDailyPlaner(context!!, dailyPlan!!)
+
             } else{
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
             }
@@ -277,6 +289,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         compositeDisposable.add(homeViewModel.editDailyPlan(dailyPlaner).subscribe {
             if(it){
                 Toast.makeText(context, "Daily plan was successfully updated", Toast.LENGTH_SHORT).show()
+                AlarmScheduler.scheduleAlarmForDailyPlaner(context!!, dailyPlaner)
             } else{
                 Toast.makeText(context, "Something went wrong when editing", Toast.LENGTH_SHORT).show()
             }
@@ -368,7 +381,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         return isValid
     }
 
-    private fun addTextChangeListner(){
+    private fun addTextChangeListener(){
 
         etDate.afterTextChangeEvents()
             .map {
