@@ -2,12 +2,12 @@ package com.example.dailyfoodplanner.ui.home
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -20,7 +20,9 @@ import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.TIME_FORMAT
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import dagger.android.support.DaggerFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -74,7 +76,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         dailyPlanId = HomeFragmentArgs.fromBundle(arguments!!).dailyPlanId
 
-        initDate(dailyPlanId)
+        setInitials(dailyPlanId)
 
         addTextChangeListener()
 
@@ -87,7 +89,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         compositeDisposable.add(btnAdd.clicks().subscribe {
             if (ifAllDataIsFilled()){
-                writeAllData()
+                addDailyPlaner()
                 cleanAllFields()
                 etTimeDinner.clearFocus()
             }
@@ -96,7 +98,10 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
     override fun onResume() {
         super.onResume()
-        initDate(dailyPlanId)
+
+        //set today as default
+        val today = SimpleDateFormat("dd/MM/yy").format(Calendar.getInstance().time)
+        textInputDate.hint =  "Today, $today"
     }
 
     override fun onDestroyView() {
@@ -107,7 +112,8 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         (activity as MainActivity).shouldEnableBottomNavigation(true)
     }
 
-    private fun initDate(dailyPlanId: String?){
+    private fun setInitials(dailyPlanId: String?){
+        etDate.showSoftInputOnFocus = false
         loadAllRecipes()
 
         adapter = ArrayAdapter(requireContext(), R.layout.list_recipes, listOfRecipes)
@@ -193,13 +199,8 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         }, yearDisplay, monthDisplay, dayDisplay)
 
         datePicker?.show()
+        datePicker?.datePicker?.descendantFocusability = DatePicker.FOCUS_BLOCK_DESCENDANTS
     }
-//
-//    private fun closeDatePicker(){
-//        if(datePicker != null){
-//            datePicker?.dismiss()
-//        }
-//    }
 
     private fun openTimePicker(viewId: Int){
         val editText = view?.findViewById<EditText>(viewId)
@@ -214,12 +215,6 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         }, hourDisplay, minuteDisplay, true)
 
         timePicker?.show()
-    }
-
-    private fun closeTimePicker(){
-        if(timePicker != null){
-            timePicker?.dismiss()
-        }
     }
 
     private fun getHour(viewId: Int): Int{
@@ -269,17 +264,19 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         }
     }
 
-    private fun writeAllData(){
+    private fun addDailyPlaner(){
         val dailyPlaner = DailyPlaner(null, etDate.text.toString(), etTimeBreakfast.text.toString(), spinnerBreakfast.selectedItem.toString(),
             etTimeSnack1.text.toString(), spinnerSnack1.selectedItem.toString(), etTimeLunch.text.toString(), spinnerLunch.selectedItem.toString(),
             etTimeSnack2.text.toString(), spinnerSnack2.selectedItem.toString(), etTimeDinner.text.toString(), spinnerDinner.selectedItem.toString())
+        val date = etDate.text.toString()
 
-        compositeDisposable.add(homeViewModel.writeDailyPlaner(dailyPlaner).subscribe {(isSuccessfull, dailyPlan) ->
+        compositeDisposable.add(homeViewModel.addDailyPlaner(dailyPlaner).subscribe { (isSuccessfull, dailyPlan) ->
             if (isSuccessfull){
                 Toast.makeText(context, "Daily plan was successfully added", Toast.LENGTH_SHORT).show()
                 AlarmScheduler.scheduleAlarmForDailyPlaner(context!!, dailyPlan!!)
-
-            } else{
+            } else if (!isSuccessfull && dailyPlan != null){
+                Toast.makeText(context, "Daily Plan with $date date already exists", Toast.LENGTH_LONG).show()
+            } else if(!isSuccessfull && dailyPlan == null){
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         })

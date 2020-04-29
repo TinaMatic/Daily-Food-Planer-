@@ -57,17 +57,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-//        applicationContext.registerReceiver(AlarmReceiver(), IntentFilter())
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-    }
-
-    override fun onStop() {
-        super.onStop()
     }
 
     fun displayHomeButton(){
