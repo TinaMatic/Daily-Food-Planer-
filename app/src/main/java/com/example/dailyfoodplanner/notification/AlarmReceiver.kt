@@ -8,9 +8,8 @@ import android.util.Log
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.constants.Constants.Companion.KEY_ID
 import com.example.dailyfoodplanner.constants.Constants.Companion.MEAL_TYPE
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.example.dailyfoodplanner.notification.AlarmScheduler.alarmCount
+
 
 class AlarmReceiver: BroadcastReceiver() {
     private val TAG = AlarmReceiver::class.java.simpleName
@@ -29,6 +28,17 @@ class AlarmReceiver: BroadcastReceiver() {
                     NotificationHelper.createNotification(context, mealType!!)
                     val vibrate = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                     vibrate.vibrate(2000L)
+
+                    if(alarmCount < 5){
+                        alarmCount++
+                    } else{
+                        alarmCount = 1
+                    }
+
+                    //if the alarms have finished schedule the next receiver for midnight the next day
+                    if(alarmCount == 5){
+                        AlarmScheduler.scheduleDailyCheckup(context)
+                    }
 
                 }
             }

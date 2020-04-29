@@ -47,15 +47,32 @@ object NotificationDataUtils {
 
     //schedules the alarm or today
     fun scheduleAlarmForToday(context: Context){
-        compositeDisposable.add(loadAllDailyPlaners()
+        val today = Calendar.getInstance()
+        val thisMonth = today.get(Calendar.MONTH) + 1
+
+        compositeDisposable.add(
+            firebaseRepositoryDailyPlaner.readDailyPlansForMonth(thisMonth)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {dailyPlanerList->
-                for(dailyPlan in dailyPlanerList){
+
+                var hasToday = false
+                val sortedList = dailyPlanerList.sortedBy {
+                    it.date.substring(0,2).toInt()
+                }
+
+                //if there is schedule for today set the alarms
+                for(dailyPlan in sortedList){
                     if(isToday(dailyPlan.date)){
                         AlarmScheduler.scheduleAlarmForDailyPlaner(context, dailyPlan)
+                        hasToday = true
                         break
                     }
+                }
+
+                //if there is no alarm for today schedule the receiver to run on midnight the nextDay
+                if(!hasToday){
+                    AlarmScheduler.scheduleDailyCheckup(context)
                 }
             })
     }

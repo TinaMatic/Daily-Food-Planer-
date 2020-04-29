@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.dailyfoodplanner.R
+import com.example.dailyfoodplanner.constants.Constants.Companion.ALARM_COUNTER
 import com.example.dailyfoodplanner.constants.Constants.Companion.BREAKFAST_REQUEST_CODE
 import com.example.dailyfoodplanner.constants.Constants.Companion.DAILY_RECEIVER_REQUEST_CODE
 import com.example.dailyfoodplanner.constants.Constants.Companion.DINNER_REQUEST_CODE
@@ -20,6 +21,8 @@ import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.getMinuteForMe
 import java.util.*
 
 object AlarmScheduler {
+
+    var alarmCount = 0
 
     //schedules all the alarms for DailyPlaner
     fun scheduleAlarmForDailyPlaner(context: Context, dailyPlaner: DailyPlaner){
@@ -128,11 +131,12 @@ object AlarmScheduler {
         //get the time when to fire the receiver
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
+        calendar.add(Calendar.DAY_OF_MONTH, 1)
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
 
         //create alarm manager
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, alarmIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
     }
 }

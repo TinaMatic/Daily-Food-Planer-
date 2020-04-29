@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.dailyfoodplanner.base.ViewModelFactory
 import com.example.dailyfoodplanner.di.annotation.ViewModelKey
-import com.example.dailyfoodplanner.ui.dailyPlanerDetails.DailyPlanerDetailsViewModel
 import com.example.dailyfoodplanner.ui.home.HomeViewModel
 import com.example.dailyfoodplanner.ui.notes.NotesViewModel
 import com.example.dailyfoodplanner.ui.recipeDetails.RecipeDetailsViewModel
@@ -36,11 +35,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NotesViewModel::class)
     abstract fun bindNotesViewModel(notesViewModel: NotesViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(DailyPlanerDetailsViewModel::class)
-    abstract fun bindDailyPlanerDetailsViewModel(dailyPlanerDetailsViewModel: DailyPlanerDetailsViewModel): ViewModel
 
     @Binds
     @IntoMap
