@@ -24,7 +24,7 @@
             <TextView
                 android:id="@+id/tvNote"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="15dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/homeTextView"
