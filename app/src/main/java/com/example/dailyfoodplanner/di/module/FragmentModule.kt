@@ -1,6 +1,5 @@
 package com.example.dailyfoodplanner.di.module
 
-import com.example.dailyfoodplanner.ui.dailyPlanerDetails.DailyPlanerDeatilsFragment
 import com.example.dailyfoodplanner.ui.home.HomeFragment
 import com.example.dailyfoodplanner.ui.notes.NotesFragment
 import com.example.dailyfoodplanner.ui.recipeDetails.RecipeDetailsFragment
@@ -23,9 +22,6 @@ abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract fun provideNotesFragment(): NotesFragment
-
-    @ContributesAndroidInjector
-    abstract fun provideDailyPlanerDetailsFragment(): DailyPlanerDeatilsFragment
 
     @ContributesAndroidInjector
     abstract fun provideRecipeDetailsFragment(): RecipeDetailsFragment

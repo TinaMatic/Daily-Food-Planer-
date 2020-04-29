@@ -30,8 +30,6 @@ object NotificationHelper {
             .setAutoCancel(true)
             .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
             .setContentIntent(pendingIntent)
-
-
     }
 
     //sets up the notification channel

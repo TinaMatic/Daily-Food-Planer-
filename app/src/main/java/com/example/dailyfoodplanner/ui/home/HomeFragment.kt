@@ -94,13 +94,17 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        initDate(dailyPlanId)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         compositeDisposable.clear()
         homeViewModel.claer()
 
         (activity as MainActivity).shouldEnableBottomNavigation(true)
-
     }
 
     private fun initDate(dailyPlanId: String?){
@@ -190,12 +194,12 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         datePicker?.show()
     }
-
-    private fun closeDatePicker(){
-        if(datePicker != null){
-            datePicker?.dismiss()
-        }
-    }
+//
+//    private fun closeDatePicker(){
+//        if(datePicker != null){
+//            datePicker?.dismiss()
+//        }
+//    }
 
     private fun openTimePicker(viewId: Int){
         val editText = view?.findViewById<EditText>(viewId)
