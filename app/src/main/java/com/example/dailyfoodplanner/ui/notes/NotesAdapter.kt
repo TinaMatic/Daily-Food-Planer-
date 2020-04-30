@@ -5,13 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
 import kotlinx.android.synthetic.main.row_note.view.*
-import javax.inject.Inject
 
 class NotesAdapter (val context: Context, val notesList: List<Notes>)
     : RecyclerView.Adapter<NotesAdapter.ViewHolder>(){
@@ -20,10 +18,15 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>)
 
     private var onItemClickListener: OnItemClickedListener? = null
 
-    @Inject
-    lateinit var checkedNotes: CheckedNotes
+    private var isClickable = true
 
     val listOfCheckedNotes = arrayListOf<CheckedNotes>()
+
+    init {
+        notesList.forEach {
+            listOfCheckedNotes.add(CheckedNotes(it.notesId, false))
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(context).inflate(R.layout.row_note, parent, false)
@@ -36,14 +39,8 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-//        listOfCheckedNotes.add(CheckedNotes(notesList[position].notesId, false))
-        val isChecked = listOfCheckedNotes.any {
-            it.notesId == notesList[position].notesId
-        }
-        holder.bindView(notesList[position], isChecked)
-
-//        holder.itemView.cbNote.setOnCheckedChangeListener(this)
-
+        holder.bindView(notesList[position], position)
+        holder.itemView.cbNote.isChecked = listOfCheckedNotes[position].isChecked
     }
 
     fun setOnItemCheckedListener(checkedChangeListener: OnCheckedChangeListener){
@@ -54,50 +51,34 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>)
         this.onItemClickListener = onItemClickedListener
     }
 
+    fun setClickable(isClickable: Boolean){
+        this.isClickable = isClickable
+    }
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bindView(note: Notes, isChecked: Boolean){
+        fun bindView(note: Notes, position: Int){
             itemView.tvNote.text = note.note
 
-            itemView.cbNote.isChecked = isChecked
-
-
-//            Log.d("Checked note id", listOfCheckedNotes[position].notesId)
-
-//
-//
-//            itemView.cbNote.setOnCheckedChangeListener { buttonView, isChecked ->
-//                listOfCheckedNotes[position].isChecked = isChecked
-//            }
-//
-//            itemView.cbNote.isChecked = listOfCheckedNotes[position].isChecked
-
-//            itemView.cbNote.isChecked = checkedNotesModel?.isChecked!!
 
             itemView.cbNote.setOnCheckedChangeListener { buttonView, isChecked ->
-                if (isChecked) {
-                    listOfCheckedNotes.add(CheckedNotes(note.notesId, isChecked))
-                } else {
-                    listOfCheckedNotes.remove(CheckedNotes(note.notesId, true))
+                if(isClickable){
+                    listOfCheckedNotes[position].isChecked = isChecked
+                    checkedChangeListener?.onCheckedChange(listOfCheckedNotes)
+                } else{
+                    itemView.cbNote.isChecked = false
+                    itemView.cbNote.isClickable = false
                 }
-
-                Log.d("List of checked notes", listOfCheckedNotes.toString())
-
-                checkedChangeListener?.onCheckedChange(listOfCheckedNotes)
             }
 
             itemView.setOnClickListener{
-                if(listOfCheckedNotes.isEmpty()){
+                val selected = listOfCheckedNotes.any {
+                    it.isChecked.equals(true)
+                }
+                if(!selected){
                     onItemClickListener?.onItemClick(note)
                 }
 
             }
-
-//            val isChecked = listOfCheckedNotes.any {
-//                it.notesId == note.notesId
-//            }
-
-
-
         }
     }
 
@@ -108,8 +89,4 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>)
     interface OnItemClickedListener{
         fun onItemClick(note: Notes)
     }
-//
-//    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-////        checkedNotesModel?.isChecked = isChecked
-//    }
 }

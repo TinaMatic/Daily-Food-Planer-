@@ -54,7 +54,9 @@ class NotesViewModel @Inject constructor(): ViewModel() {
     }
 
     fun editNote(note: Notes){
-        firebaseRepositoryNotes.editNote(note)
+        if(note.note.isNotEmpty()){
+            firebaseRepositoryNotes.editNote(note)
+        }
     }
 
     fun clear(){
