@@ -30,6 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_notes.*
+import kotlinx.android.synthetic.main.row_note.*
 import javax.inject.Inject
 
 /**
@@ -52,7 +53,6 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
     private var listCheckedNotes = arrayListOf<CheckedNotes>()
     private var shouldEdit: Boolean = false
     private var clickedNote: Notes? = null
-    private var canSelect = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -182,9 +182,7 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
 
     private fun showEditText(note: String){
         if(!isEditTextVisible) {
-            recyclerViewNotes.isFocusable = true
-            recyclerViewNotes.isClickable = true
-
+            notesAdapter?.setClickable(false)
             revealEditText(revealView)
             etTodoNotes.requestFocus()
             etTodoNotes.setText(note)
@@ -193,9 +191,7 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
             val animatable = btnAddNotes.drawable as Animatable
             animatable.start()
         } else {
-            recyclerViewNotes.isFocusable = false
-            recyclerViewNotes.isClickable = false
-
+            notesAdapter?.setClickable(true)
             notesAdapter?.notifyDataSetChanged()
             inputManager.hideSoftInputFromWindow(etTodoNotes.windowToken, 0)
             hideEditText(revealView)
@@ -207,16 +203,20 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
 
     override fun onCheckedChange(listOfCheckedNotes: List<CheckedNotes>) {
         listCheckedNotes.clear()
-        listCheckedNotes.addAll(listOfCheckedNotes)
 
-        if(listOfCheckedNotes.isNotEmpty()){
+       listOfCheckedNotes.forEach {
+           if(it.isChecked){
+               listCheckedNotes.add(it)
+           }
+       }
+
+        if(listCheckedNotes.isNotEmpty()){
             btnDeleteNotes.visibility = View.VISIBLE
             btnAddNotes.visibility = View.INVISIBLE
         } else{
             btnAddNotes.visibility = View.VISIBLE
             btnDeleteNotes.visibility = View.INVISIBLE
         }
-
     }
 
     override fun onItemClick(note: Notes) {

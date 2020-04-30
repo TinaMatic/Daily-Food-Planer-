@@ -90,7 +90,6 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         compositeDisposable.add(btnAdd.clicks().subscribe {
             if (ifAllDataIsFilled()){
                 addDailyPlaner()
-                cleanAllFields()
                 etTimeDinner.clearFocus()
             }
         })
@@ -274,6 +273,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             if (isSuccessfull){
                 Toast.makeText(context, "Daily plan was successfully added", Toast.LENGTH_SHORT).show()
                 AlarmScheduler.scheduleAlarmForDailyPlaner(context!!, dailyPlan!!)
+                cleanAllFields()
             } else if (!isSuccessfull && dailyPlan != null){
                 Toast.makeText(context, "Daily Plan with $date date already exists", Toast.LENGTH_LONG).show()
             } else if(!isSuccessfull && dailyPlan == null){
