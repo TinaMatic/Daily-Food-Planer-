@@ -1,7 +1,6 @@
 package com.example.dailyfoodplanner.ui.notes
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
-import kotlinx.android.synthetic.main.row_note.view.*
+import kotlinx.android.synthetic.main.item_note.view.*
 
 class NotesAdapter (val context: Context, val notesList: List<Notes>)
     : RecyclerView.Adapter<NotesAdapter.ViewHolder>(){
@@ -29,7 +28,7 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.row_note, parent, false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false)
         return ViewHolder(itemView)
     }
 

@@ -3,6 +3,6 @@
     android:color="@color/colorAccent">
 
     <item android:id="@+id/mask"
-        android:drawable="@color/btnReadMore"/>
+        android:drawable="@color/buttonColor"/>
 
 </ripple>

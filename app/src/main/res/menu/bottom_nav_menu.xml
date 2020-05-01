@@ -21,4 +21,9 @@
         android:icon="@drawable/notes"
         android:title="@string/title_notes"/>
 
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/settings"
+        android:title="@string/title_settings"/>
+
 </menu>

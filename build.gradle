@@ -40,6 +40,9 @@ ext{
 
     //material design
     support_version = '29.0.0'
+
+    //picasso
+    picasso_version = '2.5.2'
 }
 
 allprojects {
