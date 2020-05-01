@@ -30,7 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_notes.*
-import kotlinx.android.synthetic.main.row_note.*
+import kotlinx.android.synthetic.main.item_note.*
 import javax.inject.Inject
 
 /**

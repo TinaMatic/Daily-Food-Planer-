@@ -63,4 +63,12 @@
             android:defaultValue="@null"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.dailyfoodplanner.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings">
+
+    </fragment>
+
 </navigation>

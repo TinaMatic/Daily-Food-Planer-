@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+   <TextView
+       android:id="@+id/tvNotifications"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="@string/notifications_label"
+       android:textSize="18dp"
+       android:layout_marginTop="20dp"
+       android:layout_marginStart="10dp"
+       android:layout_below="@id/header"/>
+
+    <Switch
+        android:id="@+id/notificationsSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tvNotifications"
+        android:layout_alignBottom="@id/tvNotifications"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"/>
+
+    <ImageView
+        android:id="@+id/ivLogout"
+        android:layout_width="33dp"
+        android:layout_height="24dp"
+        android:layout_below="@id/tvNotifications"
+        android:layout_alignLeft="@id/tvNotifications"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/logout" />
+
+    <TextView
+        android:id="@+id/tvLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/ivLogout"
+        android:layout_below="@id/tvNotifications"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"/>
+
+</RelativeLayout>

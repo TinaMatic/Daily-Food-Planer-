@@ -12,5 +12,10 @@ class Constants {
         const val SNACK2_REQUEST_CODE = 3
         const val DINNER_REQUEST_CODE = 4
         const val DAILY_RECEIVER_REQUEST_CODE = 100
+
+        const val DAILY_PLANER_DATABASE = "DailyPlaner"
+        const val NOTES_DATABASE = "Notes"
+        const val RECIPES_DATABASE = "Recipes"
+        const val USERS_DATABASE = "Users"
     }
 }

@@ -5,6 +5,7 @@ import com.example.dailyfoodplanner.ui.notes.NotesFragment
 import com.example.dailyfoodplanner.ui.recipeDetails.RecipeDetailsFragment
 import com.example.dailyfoodplanner.ui.recipes.RecipesFragment
 import com.example.dailyfoodplanner.ui.schedule.ScheduleFragment
+import com.example.dailyfoodplanner.ui.settings.SettingsFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -25,4 +26,7 @@ abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract fun provideRecipeDetailsFragment(): RecipeDetailsFragment
+
+    @ContributesAndroidInjector
+    abstract fun provideSettingsFragment(): SettingsFragment
 }
