@@ -41,7 +41,7 @@ class FirebaseRepository @Inject constructor() {
 
                         val currentUserDatabase =  mDatabaseReference.child(userId).child("Users")
 
-                        val user = User(userId, username, email, password)
+                        val user = User(userId, username, email, password, "none")
 
                         currentUserDatabase.setValue(user).addOnCompleteListener { task: Task<Void> ->
                             if(task.isSuccessful){

@@ -102,4 +102,7 @@ dependencies {
     //circle image
     implementation 'de.hdodenhof:circleimageview:3.0.1'
 
+    //crop image
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
 }

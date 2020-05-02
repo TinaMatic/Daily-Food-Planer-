@@ -77,6 +77,8 @@
     <!--Settings Screen-->
     <string name="notifications_label">Turn notifications ON/OFF</string>
     <string name="logout">Logout</string>
+    <string name="notification_dialog_title">Change notification settings</string>
+    <string name="notification_dialog_message">To change notification settings go to the phone settings</string>
 
     <!--Login and Register screen-->
     <string name="email_hint">Email</string>

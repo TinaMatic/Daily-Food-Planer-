@@ -142,6 +142,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         //set today as default
         val today = SimpleDateFormat("dd/MM/yy").format(Calendar.getInstance().time)
         textInputDate.hint =  "Today, $today"
+        etDate.setText( "Today, $today")
 
         //set onClick listeners
         etDate.setOnClickListener(this)

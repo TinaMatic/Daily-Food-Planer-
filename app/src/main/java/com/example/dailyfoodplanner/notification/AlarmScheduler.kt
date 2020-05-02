@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.dailyfoodplanner.R
-import com.example.dailyfoodplanner.constants.Constants.Companion.ALARM_COUNTER
 import com.example.dailyfoodplanner.constants.Constants.Companion.BREAKFAST_REQUEST_CODE
 import com.example.dailyfoodplanner.constants.Constants.Companion.DAILY_RECEIVER_REQUEST_CODE
 import com.example.dailyfoodplanner.constants.Constants.Companion.DINNER_REQUEST_CODE
@@ -22,7 +21,7 @@ import java.util.*
 
 object AlarmScheduler {
 
-    var alarmCount = 0
+//    var alarmCount = 0
 
     //schedules all the alarms for DailyPlaner
     fun scheduleAlarmForDailyPlaner(context: Context, dailyPlaner: DailyPlaner){
@@ -138,5 +137,15 @@ object AlarmScheduler {
         //create alarm manager
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
+    }
+
+    fun removeDailyCheckup(context: Context){
+        val intent = Intent(context.applicationContext, DailyReceiver::class.java)
+        intent.action = context.getString(R.string.action_notify_daily_receiver)
+
+        val alarmIntent = PendingIntent.getBroadcast(context.applicationContext, DAILY_RECEIVER_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(alarmIntent)
     }
 }
