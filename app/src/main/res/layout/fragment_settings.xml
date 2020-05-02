@@ -12,6 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <ImageView
+        android:id="@+id/ivNotifications"
+        android:layout_width="33dp"
+        android:layout_height="24dp"
+        android:src="@drawable/notification"
+        android:layout_below="@id/header"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"/>
+
    <TextView
        android:id="@+id/tvNotifications"
        android:layout_width="wrap_content"
@@ -20,7 +29,8 @@
        android:textSize="18dp"
        android:layout_marginTop="20dp"
        android:layout_marginStart="10dp"
-       android:layout_below="@id/header"/>
+       android:layout_toRightOf="@id/ivNotifications"
+       android:layout_alignBottom="@id/ivNotifications"/>
 
     <Switch
         android:id="@+id/notificationsSwitch"
@@ -36,7 +46,7 @@
         android:layout_width="33dp"
         android:layout_height="24dp"
         android:layout_below="@id/tvNotifications"
-        android:layout_alignLeft="@id/tvNotifications"
+        android:layout_alignLeft="@id/ivNotifications"
         android:layout_marginTop="15dp"
         android:src="@drawable/logout" />
 
@@ -48,6 +58,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_toRightOf="@id/ivLogout"
+        android:layout_alignLeft="@id/tvNotifications"
         android:layout_below="@id/tvNotifications"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"/>

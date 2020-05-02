@@ -1,5 +1,6 @@
 package com.example.dailyfoodplanner
 
+import android.content.BroadcastReceiver
 import com.example.dailyfoodplanner.di.component.ApplicationComponent
 import com.example.dailyfoodplanner.di.component.DaggerApplicationComponent
 import com.example.dailyfoodplanner.di.module.ApplicationModule
@@ -7,7 +8,10 @@ import com.example.dailyfoodplanner.notification.AlarmScheduler
 import com.example.dailyfoodplanner.notification.NotificationDataUtils
 import com.example.dailyfoodplanner.notification.NotificationHelper
 import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.support.DaggerApplication
+import javax.inject.Inject
 
 class DailyFoodPlannerApplication: DaggerApplication() {
 
@@ -34,4 +38,5 @@ class DailyFoodPlannerApplication: DaggerApplication() {
         super.onTerminate()
         NotificationDataUtils.clear()
     }
+
 }

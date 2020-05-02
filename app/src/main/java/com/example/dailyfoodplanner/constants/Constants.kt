@@ -4,7 +4,6 @@ class Constants {
     companion object{
         const val KEY_ID = "id"
         const val MEAL_TYPE = "mealType"
-        const val ALARM_COUNTER = "alarmCounter"
 
         const val BREAKFAST_REQUEST_CODE = 0
         const val SNACK1_REQUEST_CODE = 1
@@ -17,5 +16,11 @@ class Constants {
         const val NOTES_DATABASE = "Notes"
         const val RECIPES_DATABASE = "Recipes"
         const val USERS_DATABASE = "Users"
+        const val USERS_PROFILE_PICTURES = "usersProfilePictures"
+
+        const val SHARED_PREFERENCES = "dailyPlanerSharedPref"
+        const val PUSH_NOTIFICATIONS_ENABLED = "pushNotificationEnabled"
+
+        const val GALLERY_ID = 1
     }
 }
