@@ -64,6 +64,26 @@ class FirebaseRepositoryUsers @Inject constructor() {
         }
     }
 
+    fun getUserProfileData(): Observable<Pair<String, Uri>>{
+        val currentUserId = mAuth.currentUser?.uid
+
+        return Observable.create<Pair<String, Uri>> {emitter ->
+            usersDatabase.child(currentUserId!!).child(USERS_DATABASE)
+                .addListenerForSingleValueEvent(object: ValueEventListener{
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val username = dataSnapshot.child("username").value.toString()
+                        val image = dataSnapshot.child("image").value.toString().toUri()
+                        emitter.onNext(Pair(username, image))
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        emitter.onError(error.toException())
+                    }
+                })
+        }
+    }
+
     fun loadPicture(resultUri: Uri?): Observable<Boolean>{
         val currentUserId = mAuth.currentUser?.uid
 

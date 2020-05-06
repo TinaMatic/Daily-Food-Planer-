@@ -32,6 +32,8 @@ class LoginActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        supportActionBar?.title = "Login"
+
         loginViewModel = ViewModelProvider(this, viewModelFactory).get(LoginViewModel::class.java)
 
         compositeDisposable.add(loginViewModel.isUserLoggedIn()

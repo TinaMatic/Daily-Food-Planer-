@@ -21,6 +21,8 @@
     <string name="snack2">Snack 2</string>
     <string name="dinner">Dinner</string>
     <string name="btnSubmit">Submit</string>
+    <string name="leave_screen_dialog_title">Leaving</string>
+    <string name="leave_screen_dialog_message">Are you sure you want to leave the Home screen?</string>
 
     <!--Notes screen-->
     <string name="notesTitle">Notes:</string>
