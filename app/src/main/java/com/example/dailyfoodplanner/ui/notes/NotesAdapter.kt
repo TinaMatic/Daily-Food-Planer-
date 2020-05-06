@@ -8,18 +8,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
-import kotlinx.android.synthetic.main.row_note.view.*
+import kotlinx.android.synthetic.main.item_note.view.*
 
-class NotesAdapter (val context: Context, val notesList: List<Notes>): RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+class NotesAdapter (val context: Context, private val notesList: List<Notes>)
+    : RecyclerView.Adapter<NotesAdapter.ViewHolder>(){
 
     private var checkedChangeListener: OnCheckedChangeListener? = null
 
     private var onItemClickListener: OnItemClickedListener? = null
 
+    private var isClickable = true
+
     val listOfCheckedNotes = arrayListOf<CheckedNotes>()
 
+    init {
+        notesList.forEach {
+            listOfCheckedNotes.add(CheckedNotes(it.notesId, false))
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.row_note, parent, false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false)
         return ViewHolder(itemView)
     }
 
@@ -28,8 +37,9 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>): RecyclerV
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindView(notesList[position])
 
+        holder.bindView(notesList[position], position)
+        holder.itemView.cbNote.isChecked = listOfCheckedNotes[position].isChecked
     }
 
     fun setOnItemCheckedListener(checkedChangeListener: OnCheckedChangeListener){
@@ -40,33 +50,33 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>): RecyclerV
         this.onItemClickListener = onItemClickedListener
     }
 
+    fun setClickable(isClickable: Boolean){
+        this.isClickable = isClickable
+    }
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bindView(note: Notes){
+        fun bindView(note: Notes, position: Int){
             itemView.tvNote.text = note.note
 
-            itemView.cbNote.setOnCheckedChangeListener { buttonView, isChecked ->
-                if(isChecked){
-                    listOfCheckedNotes.add(CheckedNotes(note.notesId, isChecked))
-                } else {
-                    val listOfDeleteNotes = arrayListOf<CheckedNotes>()
-                    listOfCheckedNotes.forEach {
-                        if(it.notesId.equals(note.notesId)){
-                            listOfDeleteNotes.add(it)
-                        }
-                    }
-                    listOfCheckedNotes.removeAll(listOfDeleteNotes)
-                }
 
-                checkedChangeListener?.onCheckedChange(listOfCheckedNotes)
+            itemView.cbNote.setOnCheckedChangeListener { buttonView, isChecked ->
+                if(isClickable){
+                    listOfCheckedNotes[position].isChecked = isChecked
+                    checkedChangeListener?.onCheckedChange(listOfCheckedNotes)
+                } else{
+                    itemView.cbNote.isChecked = false
+                }
             }
 
             itemView.setOnClickListener{
-                if(listOfCheckedNotes.isEmpty()){
+                val selected = listOfCheckedNotes.any {
+                    it.isChecked.equals(true)
+                }
+                if(!selected){
                     onItemClickListener?.onItemClick(note)
                 }
 
             }
-
         }
     }
 

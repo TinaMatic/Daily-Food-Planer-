@@ -60,7 +60,7 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
         compositeDisposable.add(searchTextObservable
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                showProgressBar(true)
+                showProgressBarRecipe(true)
             }
             .observeOn(Schedulers.io())
             .switchMap {
@@ -68,7 +68,7 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
-                showProgressBar(false)
+                showProgressBarRecipe(false)
                 setRecipeAdapter(it)
             },{})
         )
@@ -79,8 +79,8 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         recipeViewModel.claer()
         compositeDisposable.clear()
     }
@@ -91,6 +91,10 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
         recipeViewModel.allRecipesLiveData.observe(this, Observer {
             setRecipeAdapter(it)
             recipeAdapter.notifyDataSetChanged()
+        })
+
+        recipeViewModel.recipeLoading.observe(this, Observer {
+            showProgressBarRecipe(it)
         })
     }
 
@@ -206,11 +210,13 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
         alert.show()
     }
 
-    fun showProgressBar(show: Boolean){
+    private fun showProgressBarRecipe(show: Boolean){
         if(show){
             progressBarRecipe.visibility = View.VISIBLE
+            recyclerViewRecipes.visibility = View.INVISIBLE
         } else{
             progressBarRecipe.visibility = View.INVISIBLE
+            recyclerViewRecipes.visibility = View.VISIBLE
         }
     }
 

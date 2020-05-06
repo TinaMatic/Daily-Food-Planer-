@@ -30,6 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_notes.*
+import kotlinx.android.synthetic.main.item_note.*
 import javax.inject.Inject
 
 /**
@@ -44,8 +45,8 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
 
     private var compositeDisposable = CompositeDisposable()
 
-    lateinit var inputManager: InputMethodManager
-    lateinit var notesAdapter: NotesAdapter
+    private lateinit var inputManager: InputMethodManager
+    private var notesAdapter: NotesAdapter? = null
 
     private var isEditTextVisible: Boolean = false
     private var defaultColor: Int = 0
@@ -90,19 +91,34 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
 
         notesViewModel.notesLiveData.observe(viewLifecycleOwner, Observer {listAllNotes->
             setUpAdapter(listAllNotes)
-            notesAdapter.notifyDataSetChanged()
+            notesAdapter?.notifyDataSetChanged()
+        })
+
+        notesViewModel.notesLoading.observe(this, Observer {
+            showProgressBarNotes(it)
         })
     }
+
 
     private fun setUpAdapter(notesList: List<Notes>){
         notesAdapter = NotesAdapter(requireContext(), notesList)
 
-        notesAdapter.setOnItemCheckedListener(this)
-        notesAdapter.setOnItemClickListener(this)
+        notesAdapter?.setOnItemCheckedListener(this)
+        notesAdapter?.setOnItemClickListener(this)
 
         recyclerViewNotes.layoutManager = LinearLayoutManager(context)
         recyclerViewNotes.adapter = notesAdapter
 
+    }
+
+    private fun showProgressBarNotes(show: Boolean){
+        if(show){
+            progressBarNotes.visibility = View.VISIBLE
+            recyclerViewNotes.visibility = View.INVISIBLE
+        } else{
+            progressBarNotes.visibility = View.INVISIBLE
+            recyclerViewNotes.visibility = View.VISIBLE
+        }
     }
 
     private fun writeNote(note: String){
@@ -137,7 +153,18 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
 
     override fun onClick(view: View?) {
         when(view?.id){
-            R.id.btnAddNotes -> showEditText("")
+            R.id.btnAddNotes -> {
+                showEditText("")
+                if(shouldEdit){
+                    //edit note
+                    notesViewModel.editNote(Notes(clickedNote?.notesId, etTodoNotes.text.toString()))
+                    etTodoNotes.setText("")
+                    shouldEdit = false
+                } else{
+                    writeNote(etTodoNotes.text.toString())
+                    etTodoNotes.setText("")
+                }
+            }
             R.id.btnDeleteNotes -> deleteNotes(listCheckedNotes)
         }
     }
@@ -169,6 +196,8 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
 
     private fun showEditText(note: String){
         if(!isEditTextVisible) {
+            notesAdapter?.setClickable(false)
+            notesAdapter?.notifyDataSetChanged()
             revealEditText(revealView)
             etTodoNotes.requestFocus()
             etTodoNotes.setText(note)
@@ -177,15 +206,8 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
             val animatable = btnAddNotes.drawable as Animatable
             animatable.start()
         } else {
-            if(shouldEdit){
-                //edit note
-                notesViewModel.editNote(Notes(clickedNote?.notesId, etTodoNotes.text.toString()))
-                shouldEdit = false
-            } else{
-                writeNote(etTodoNotes.text.toString())
-            }
-            notesAdapter.notifyDataSetChanged()
-            etTodoNotes.setText("")
+            notesAdapter?.setClickable(true)
+            notesAdapter?.notifyDataSetChanged()
             inputManager.hideSoftInputFromWindow(etTodoNotes.windowToken, 0)
             hideEditText(revealView)
             btnAddNotes.setImageResource(R.drawable.icn_morph_reverse)
@@ -196,16 +218,20 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
 
     override fun onCheckedChange(listOfCheckedNotes: List<CheckedNotes>) {
         listCheckedNotes.clear()
-        listCheckedNotes.addAll(listOfCheckedNotes)
 
-        if(listOfCheckedNotes.isNotEmpty()){
+       listOfCheckedNotes.forEach {
+           if(it.isChecked){
+               listCheckedNotes.add(it)
+           }
+       }
+
+        if(listCheckedNotes.isNotEmpty()){
             btnDeleteNotes.visibility = View.VISIBLE
             btnAddNotes.visibility = View.INVISIBLE
         } else{
             btnAddNotes.visibility = View.VISIBLE
             btnDeleteNotes.visibility = View.INVISIBLE
         }
-
     }
 
     override fun onItemClick(note: Notes) {

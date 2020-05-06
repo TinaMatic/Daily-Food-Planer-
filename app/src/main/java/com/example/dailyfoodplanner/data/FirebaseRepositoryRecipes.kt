@@ -1,21 +1,27 @@
 package com.example.dailyfoodplanner.data
 
+import com.example.dailyfoodplanner.constants.Constants.Companion.RECIPES_DATABASE
 import com.example.dailyfoodplanner.model.Recipes
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class FirebaseRepositoryRecipes @Inject constructor() {
 
-    private var recipesDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference.child("Recipes")
+    private var recipesDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+
+    private val mAuth = FirebaseAuth.getInstance()
 
     fun writeRecipes(recipes: Recipes): Observable<Boolean>{
+        val currentUserId = mAuth.currentUser!!.uid
         val recipeId = recipesDatabase.push().key
 
         return Observable.create<Boolean> {emitter ->
             val tempRecipeObject = Recipes(recipeId, recipes.title, recipes.description, recipes.ingredients)
-            recipesDatabase.child(recipeId!!).setValue(tempRecipeObject).addOnCompleteListener { task: Task<Void> ->
+            recipesDatabase.child(currentUserId).child(RECIPES_DATABASE).child(recipeId!!)
+                .setValue(tempRecipeObject).addOnCompleteListener { task: Task<Void> ->
                 if(task.isSuccessful){
                     emitter.onNext(true)
                 } else{
@@ -26,10 +32,13 @@ class FirebaseRepositoryRecipes @Inject constructor() {
     }
 
     fun loadAllRecipes(): Observable<List<Recipes>>{
+        val currentUserId = mAuth.currentUser!!.uid
+
         return Observable.create<List<Recipes>> {emitter ->
             val listOfRecipes = arrayListOf<Recipes>()
 
-            recipesDatabase.addListenerForSingleValueEvent(object : ValueEventListener{
+            recipesDatabase.child(currentUserId).child(RECIPES_DATABASE)
+                .addListenerForSingleValueEvent(object : ValueEventListener{
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val orderSnapshot = dataSnapshot.children
@@ -63,8 +72,11 @@ class FirebaseRepositoryRecipes @Inject constructor() {
     }
 
     fun loadSingleRecipe(recipeId: String): Observable<Recipes>{
+        val currentUserId = mAuth.currentUser!!.uid
+
         return Observable.create<Recipes> {emitter ->
-            recipesDatabase.child(recipeId).addListenerForSingleValueEvent(object: ValueEventListener{
+            recipesDatabase.child(currentUserId).child(RECIPES_DATABASE).child(recipeId)
+                .addListenerForSingleValueEvent(object: ValueEventListener{
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val id = dataSnapshot.key
@@ -92,8 +104,11 @@ class FirebaseRepositoryRecipes @Inject constructor() {
     }
 
     fun deleteRecipe(recipeId: String): Observable<Boolean>{
+        val currentUserId = mAuth.currentUser!!.uid
+
         return Observable.create<Boolean> {emitter ->
-            recipesDatabase.child(recipeId).removeValue().addOnCompleteListener { task: Task<Void> ->
+            recipesDatabase.child(currentUserId).child(RECIPES_DATABASE).child(recipeId)
+                .removeValue().addOnCompleteListener { task: Task<Void> ->
                 if(task.isSuccessful){
                     emitter.onNext(true)
                 } else{
@@ -104,8 +119,11 @@ class FirebaseRepositoryRecipes @Inject constructor() {
     }
 
     fun editRecipe(recipes: Recipes): Observable<Boolean>{
+        val currentUserId = mAuth.currentUser!!.uid
+
         return Observable.create<Boolean> {emitter ->
-            recipesDatabase.child(recipes.recipeId!!).setValue(recipes).addOnCompleteListener { task: Task<Void> ->
+            recipesDatabase.child(currentUserId).child(RECIPES_DATABASE).child(recipes.recipeId!!)
+                .setValue(recipes).addOnCompleteListener { task: Task<Void> ->
                 if(task.isSuccessful){
                     emitter.onNext(true)
                 } else{
@@ -114,6 +132,4 @@ class FirebaseRepositoryRecipes @Inject constructor() {
             }
         }
     }
-
-
 }

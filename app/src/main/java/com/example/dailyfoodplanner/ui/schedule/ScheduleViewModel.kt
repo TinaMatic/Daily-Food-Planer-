@@ -19,8 +19,11 @@ class ScheduleViewModel @Inject constructor(): ViewModel() {
 
     var dailyPlansForMonthLiveData: MutableLiveData<List<DailyPlaner>> = MutableLiveData()
     var dailyPlansErrorLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    var dailyPlansLoading: MutableLiveData<Boolean> = MutableLiveData()
 
     fun readDailyPlansForMonth(month: Int){
+
+        dailyPlansLoading.value = true
 
         compositeDisposable.add(firebaseRepositoryDailyPlaner.readDailyPlansForMonth(month)
             .subscribeOn(Schedulers.io())
@@ -32,9 +35,11 @@ class ScheduleViewModel @Inject constructor(): ViewModel() {
                 }
 
                 dailyPlansForMonthLiveData.postValue(sortedList)
+                dailyPlansLoading.value = false
                 dailyPlansErrorLiveData.value = false
             }, {
                 dailyPlansErrorLiveData.value = true
+                dailyPlansLoading.value = false
             }))
     }
 

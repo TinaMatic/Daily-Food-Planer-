@@ -1,11 +1,9 @@
 package com.example.dailyfoodplanner.di.component
 
 import android.app.Application
+import android.content.SharedPreferences
 import com.example.dailyfoodplanner.DailyFoodPlannerApplication
-import com.example.dailyfoodplanner.di.module.ActivityModule
-import com.example.dailyfoodplanner.di.module.ApplicationModule
-import com.example.dailyfoodplanner.di.module.FragmentModule
-import com.example.dailyfoodplanner.di.module.ViewModelModule
+import com.example.dailyfoodplanner.di.module.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -14,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [AndroidSupportInjectionModule::class, ApplicationModule::class, ActivityModule::class,
-    ViewModelModule::class, FragmentModule::class])
+    ViewModelModule::class, FragmentModule::class, BroadcastReceiverModule::class])
 
 interface ApplicationComponent: AndroidInjector<DailyFoodPlannerApplication> {
 

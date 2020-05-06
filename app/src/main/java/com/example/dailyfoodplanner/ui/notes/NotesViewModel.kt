@@ -34,13 +34,10 @@ class NotesViewModel @Inject constructor(): ViewModel() {
                 .subscribe ({
                     notesError.value = false
                     notesLiveData.postValue(it)
+                    notesLoading.value = false
                 },{
                     notesError.value = true
                     notesLoading.value = false
-                },{
-                    notesError.value = false
-                    notesLoading.value = false
-
                 })
         )
     }
@@ -54,7 +51,9 @@ class NotesViewModel @Inject constructor(): ViewModel() {
     }
 
     fun editNote(note: Notes){
-        firebaseRepositoryNotes.editNote(note)
+        if(note.note.isNotEmpty()){
+            firebaseRepositoryNotes.editNote(note)
+        }
     }
 
     fun clear(){

@@ -26,6 +26,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     var dailyPlanLiveData = MutableLiveData<DailyPlaner>()
     var recipeLiveData = MutableLiveData<List<Recipes>>()
+    var recipeLoading = MutableLiveData<Boolean>()
 
     fun readSingleDailyPlan(dailyPlanId: String){
         compositeDisposable.add(firebaseRepositoryDailyPlaner.readSingleDailyPlan(dailyPlanId)
@@ -35,9 +36,29 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 dailyPlanLiveData.postValue(it)
             },{}))
     }
+    fun addDailyPlaner(dailyPlaner: DailyPlaner): Observable<Pair<Boolean, DailyPlaner?>>{
+        return Observable.create<Pair<Boolean, DailyPlaner?>> { emitter ->
+            firebaseRepositoryDailyPlaner.readAllDailyPlans()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    //check if the daily plan with chosen date already exists
+                    val doesExists = it.any { dailyPlanList ->
+                        dailyPlanList.date.equals(dailyPlaner.date)
+                    }
 
-    fun writeDailyPlaner(dailyPlaner: DailyPlaner): Observable<Pair<Boolean, DailyPlaner?>>{
-        return firebaseRepositoryDailyPlaner.writeDailyPlaner(dailyPlaner)
+                    if (doesExists) {
+                        emitter.onNext(Pair(false, dailyPlaner))
+                    } else {
+                        firebaseRepositoryDailyPlaner.writeDailyPlaner(dailyPlaner)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {
+                                emitter.onNext(it)
+                            }
+                    }
+                }
+        }
     }
 
     fun editDailyPlan(dailyPlaner: DailyPlaner): Observable<Boolean>{
@@ -45,12 +66,17 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun loadAllRecipes(){
+        recipeLoading.value = true
+
         compositeDisposable.add(firebaseRepositoryRecipes.loadAllRecipes()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 recipeLiveData.postValue(it)
-        },{}))
+                recipeLoading.value = false
+        },{
+                recipeLoading.value = false
+            }))
     }
 
     fun claer(){

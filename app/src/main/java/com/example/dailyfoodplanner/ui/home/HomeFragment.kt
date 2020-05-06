@@ -1,16 +1,21 @@
 package com.example.dailyfoodplanner.ui.home
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.fragment.findNavController
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
 import com.example.dailyfoodplanner.notification.AlarmScheduler
@@ -22,8 +27,10 @@ import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
 
 class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeListener {
@@ -35,7 +42,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
     private lateinit var adapter: ArrayAdapter<String>
 
-    private var listOfRecipes = arrayListOf("None")
+    private var listOfRecipes = arrayListOf<String>()
 
     var compositeDisposable = CompositeDisposable()
 
@@ -72,9 +79,10 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
+
         dailyPlanId = HomeFragmentArgs.fromBundle(arguments!!).dailyPlanId
 
-        initDate(dailyPlanId)
+        setInitials(dailyPlanId)
 
         addTextChangeListener()
 
@@ -82,16 +90,35 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             if(ifAllDataIsFilled()){
                 editDailyPlan(dailyPlanId!!)
                 etTimeDinner.clearFocus()
+                findNavController().navigate(R.id.backToSchedule)
             }
         })
 
         compositeDisposable.add(btnAdd.clicks().subscribe {
             if (ifAllDataIsFilled()){
-                writeAllData()
-                cleanAllFields()
+                addDailyPlaner()
                 etTimeDinner.clearFocus()
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        //set today as default
+        val today = SimpleDateFormat("dd/MM/yy").format(Calendar.getInstance().time)
+        textInputDate.hint =  "Today, $today"
+        etDate.setText(today)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        if(!emptyHomeScreenCheck()){
+            val destination = findNavController().currentDestination
+            findNavController().popBackStack()
+            leaveScreenDialog(destination!!)
+        }
     }
 
     override fun onDestroyView() {
@@ -100,10 +127,28 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         homeViewModel.claer()
 
         (activity as MainActivity).shouldEnableBottomNavigation(true)
+    }
+
+    private fun leaveScreenDialog(destination: NavDestination){
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(getString(R.string.leave_screen_dialog_title))
+            .setMessage(getString(R.string.leave_screen_dialog_message))
+            .setPositiveButton("Yes"){dialog,_ ->
+                cleanAllFields()
+                findNavController().popBackStack()
+                findNavController().navigate(destination.id)
+            }
+            .setNegativeButton("No"){dialog,_ ->
+                dialog.cancel()
+            }
+
+        val alert = builder.create()
+        alert.show()
 
     }
 
-    private fun initDate(dailyPlanId: String?){
+    private fun setInitials(dailyPlanId: String?){
+        etDate.showSoftInputOnFocus = false
         loadAllRecipes()
 
         adapter = ArrayAdapter(requireContext(), R.layout.list_recipes, listOfRecipes)
@@ -133,6 +178,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         //set today as default
         val today = SimpleDateFormat("dd/MM/yy").format(Calendar.getInstance().time)
         textInputDate.hint =  "Today, $today"
+        etDate.setText(today)
 
         //set onClick listeners
         etDate.setOnClickListener(this)
@@ -155,10 +201,28 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         homeViewModel.loadAllRecipes()
 
         homeViewModel.recipeLiveData.observe(this, androidx.lifecycle.Observer {listRecipes->
+            listOfRecipes.apply {
+                clear()
+                add("No Recipe")
+            }
             listRecipes.forEach {
                 listOfRecipes.add(it.title)
             }
+
+            adapter.notifyDataSetChanged()
         })
+
+        homeViewModel.recipeLoading.observe(this, androidx.lifecycle.Observer {
+            showHomeProgressBar(it)
+        })
+    }
+
+    private fun showHomeProgressBar(show: Boolean){
+        if(show){
+            progressBarHome.visibility = View.VISIBLE
+        } else{
+            progressBarHome.visibility = View.INVISIBLE
+        }
     }
 
     private fun openDatePicker(viewId: Int){
@@ -171,7 +235,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         if(editDate != null){
             yearDisplay = editDate?.substring(6)!!.toInt()
-            monthDisplay = editDate?.substring(3,5)!!.toInt()
+            monthDisplay = editDate?.substring(3,5)!!.toInt() - 1
             dayDisplay = editDate?.substring(0,2)!!.toInt()
         } else{
             yearDisplay = cal.get(Calendar.YEAR)
@@ -189,12 +253,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         }, yearDisplay, monthDisplay, dayDisplay)
 
         datePicker?.show()
-    }
-
-    private fun closeDatePicker(){
-        if(datePicker != null){
-            datePicker?.dismiss()
-        }
+        datePicker?.datePicker?.descendantFocusability = DatePicker.FOCUS_BLOCK_DESCENDANTS
     }
 
     private fun openTimePicker(viewId: Int){
@@ -210,12 +269,6 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         }, hourDisplay, minuteDisplay, true)
 
         timePicker?.show()
-    }
-
-    private fun closeTimePicker(){
-        if(timePicker != null){
-            timePicker?.dismiss()
-        }
     }
 
     private fun getHour(viewId: Int): Int{
@@ -265,17 +318,20 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         }
     }
 
-    private fun writeAllData(){
+    private fun addDailyPlaner(){
         val dailyPlaner = DailyPlaner(null, etDate.text.toString(), etTimeBreakfast.text.toString(), spinnerBreakfast.selectedItem.toString(),
             etTimeSnack1.text.toString(), spinnerSnack1.selectedItem.toString(), etTimeLunch.text.toString(), spinnerLunch.selectedItem.toString(),
             etTimeSnack2.text.toString(), spinnerSnack2.selectedItem.toString(), etTimeDinner.text.toString(), spinnerDinner.selectedItem.toString())
+        val date = etDate.text.toString()
 
-        compositeDisposable.add(homeViewModel.writeDailyPlaner(dailyPlaner).subscribe {(isSuccessfull, dailyPlan) ->
+        compositeDisposable.add(homeViewModel.addDailyPlaner(dailyPlaner).subscribe { (isSuccessfull, dailyPlan) ->
             if (isSuccessfull){
                 Toast.makeText(context, "Daily plan was successfully added", Toast.LENGTH_SHORT).show()
                 AlarmScheduler.scheduleAlarmForDailyPlaner(context!!, dailyPlan!!)
-
-            } else{
+                cleanAllFields()
+            } else if (!isSuccessfull && dailyPlan != null){
+                Toast.makeText(context, "Daily Plan with $date date already exists", Toast.LENGTH_LONG).show()
+            } else if(!isSuccessfull && dailyPlan == null){
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         })
@@ -450,6 +506,21 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
                 }
             }
             .subscribe()
+    }
+
+    private fun emptyHomeScreenCheck(): Boolean{
+        var isEmpty = true
+
+        when{
+//            etDate.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeBreakfast.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeSnack1.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeLunch.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeSnack2.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeDinner.text.toString().isNotEmpty() -> isEmpty = false
+        }
+
+        return isEmpty
     }
 
     override fun onClick(view: View?) {

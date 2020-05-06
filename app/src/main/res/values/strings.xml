@@ -8,6 +8,7 @@
     <string name="title_notes">Notes</string>
     <string name="title_recipe_details">Recipe Details</string>
     <string name="title_schedule_edit">Edit Schedule</string>
+    <string name="title_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -20,6 +21,8 @@
     <string name="snack2">Snack 2</string>
     <string name="dinner">Dinner</string>
     <string name="btnSubmit">Submit</string>
+    <string name="leave_screen_dialog_title">Leaving</string>
+    <string name="leave_screen_dialog_message">Are you sure you want to leave the Home screen?</string>
 
     <!--Notes screen-->
     <string name="notesTitle">Notes:</string>
@@ -72,4 +75,20 @@
         <item>Friday</item>
         <item>Saturday</item>
     </string-array>
+
+    <!--Settings Screen-->
+    <string name="notifications_label">Turn notifications ON/OFF</string>
+    <string name="logout">Logout</string>
+    <string name="notification_dialog_title">Change notification settings</string>
+    <string name="notification_dialog_message">To change notification settings go to the phone settings</string>
+
+    <!--Login and Register screen-->
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="register">No Account? Register here</string>
+
+
 </resources>

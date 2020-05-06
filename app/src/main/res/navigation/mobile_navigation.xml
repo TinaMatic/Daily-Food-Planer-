@@ -18,8 +18,8 @@
             android:defaultValue="@null"/>
 
         <action
-            android:id="@+id/openSchedule"
-            app:destination="@id/navigation_schedule"/>
+            android:id="@+id/backToSchedule"
+            app:popUpTo="@id/navigation_schedule" />
 
     </fragment>
 
@@ -61,6 +61,14 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.dailyfoodplanner.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings">
+
     </fragment>
 
 </navigation>

@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputSearch"
@@ -32,7 +34,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/btn_search"
         android:textColor="@color/colorPrimaryDark"
-        android:background="@color/btnReadMore"
+        android:background="@color/buttonColor"
         android:elevation="1dp"
         style="?attr/materialButtonOutlinedStyle"/>
 

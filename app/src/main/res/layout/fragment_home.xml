@@ -16,7 +16,9 @@
             android:layout_height="120dp"
             android:background="@color/colorPrimary"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <TextView
                 android:id="@+id/tvDate"
@@ -415,5 +417,11 @@
         </RelativeLayout>
     </ScrollView>
 
+    <ProgressBar
+        android:id="@+id/progressBarHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

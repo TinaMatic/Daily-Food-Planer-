@@ -21,6 +21,8 @@ import java.util.*
 
 object AlarmScheduler {
 
+//    var alarmCount = 0
+
     //schedules all the alarms for DailyPlaner
     fun scheduleAlarmForDailyPlaner(context: Context, dailyPlaner: DailyPlaner){
 
@@ -128,11 +130,22 @@ object AlarmScheduler {
         //get the time when to fire the receiver
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
+        calendar.add(Calendar.DAY_OF_MONTH, 1)
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
 
         //create alarm manager
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, alarmIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
+    }
+
+    fun removeDailyCheckup(context: Context){
+        val intent = Intent(context.applicationContext, DailyReceiver::class.java)
+        intent.action = context.getString(R.string.action_notify_daily_receiver)
+
+        val alarmIntent = PendingIntent.getBroadcast(context.applicationContext, DAILY_RECEIVER_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(alarmIntent)
     }
 }

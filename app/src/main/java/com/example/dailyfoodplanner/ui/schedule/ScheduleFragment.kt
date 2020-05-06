@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
@@ -69,8 +68,9 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scheduleViewModel.clear()
         compositeDisposable.clear()
     }
 
@@ -80,6 +80,10 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
         scheduleViewModel.dailyPlansForMonthLiveData.observe(this, Observer {
             setScheduleAdapter(it)
             scheduleAdapter.notifyDataSetChanged()
+        })
+
+        scheduleViewModel.dailyPlansLoading.observe(this, Observer {
+            showProgressBarSchedule(it)
         })
     }
 
@@ -91,9 +95,14 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
         recyclerViewSchedule.adapter = scheduleAdapter
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        scheduleViewModel.clear()
+    private fun showProgressBarSchedule(show: Boolean){
+        if(show){
+            progressBarSchedule.visibility = View.VISIBLE
+            recyclerViewSchedule.visibility = View.INVISIBLE
+        } else{
+            progressBarSchedule.visibility = View.INVISIBLE
+            recyclerViewSchedule.visibility = View.VISIBLE
+        }
     }
 
     override fun deleteDailyPlan(dailyPlanId: String, position: Int) {
