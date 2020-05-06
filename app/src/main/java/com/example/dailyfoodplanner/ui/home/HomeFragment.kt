@@ -1,8 +1,10 @@
 package com.example.dailyfoodplanner.ui.home
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,9 @@ import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.fragment.findNavController
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
 import com.example.dailyfoodplanner.notification.AlarmScheduler
@@ -20,12 +25,12 @@ import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.TIME_FORMAT
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import dagger.android.support.DaggerFragment
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
 
 class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeListener {
@@ -37,7 +42,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
     private lateinit var adapter: ArrayAdapter<String>
 
-    private var listOfRecipes = arrayListOf("None")
+    private var listOfRecipes = arrayListOf<String>()
 
     var compositeDisposable = CompositeDisposable()
 
@@ -74,6 +79,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
+
         dailyPlanId = HomeFragmentArgs.fromBundle(arguments!!).dailyPlanId
 
         setInitials(dailyPlanId)
@@ -84,6 +90,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             if(ifAllDataIsFilled()){
                 editDailyPlan(dailyPlanId!!)
                 etTimeDinner.clearFocus()
+                findNavController().navigate(R.id.backToSchedule)
             }
         })
 
@@ -101,6 +108,17 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         //set today as default
         val today = SimpleDateFormat("dd/MM/yy").format(Calendar.getInstance().time)
         textInputDate.hint =  "Today, $today"
+        etDate.setText(today)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        if(!emptyHomeScreenCheck()){
+            val destination = findNavController().currentDestination
+            findNavController().popBackStack()
+            leaveScreenDialog(destination!!)
+        }
     }
 
     override fun onDestroyView() {
@@ -109,6 +127,24 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         homeViewModel.claer()
 
         (activity as MainActivity).shouldEnableBottomNavigation(true)
+    }
+
+    private fun leaveScreenDialog(destination: NavDestination){
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(getString(R.string.leave_screen_dialog_title))
+            .setMessage(getString(R.string.leave_screen_dialog_message))
+            .setPositiveButton("Yes"){dialog,_ ->
+                cleanAllFields()
+                findNavController().popBackStack()
+                findNavController().navigate(destination.id)
+            }
+            .setNegativeButton("No"){dialog,_ ->
+                dialog.cancel()
+            }
+
+        val alert = builder.create()
+        alert.show()
+
     }
 
     private fun setInitials(dailyPlanId: String?){
@@ -142,7 +178,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         //set today as default
         val today = SimpleDateFormat("dd/MM/yy").format(Calendar.getInstance().time)
         textInputDate.hint =  "Today, $today"
-        etDate.setText( "Today, $today")
+        etDate.setText(today)
 
         //set onClick listeners
         etDate.setOnClickListener(this)
@@ -165,10 +201,28 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         homeViewModel.loadAllRecipes()
 
         homeViewModel.recipeLiveData.observe(this, androidx.lifecycle.Observer {listRecipes->
+            listOfRecipes.apply {
+                clear()
+                add("No Recipe")
+            }
             listRecipes.forEach {
                 listOfRecipes.add(it.title)
             }
+
+            adapter.notifyDataSetChanged()
         })
+
+        homeViewModel.recipeLoading.observe(this, androidx.lifecycle.Observer {
+            showHomeProgressBar(it)
+        })
+    }
+
+    private fun showHomeProgressBar(show: Boolean){
+        if(show){
+            progressBarHome.visibility = View.VISIBLE
+        } else{
+            progressBarHome.visibility = View.INVISIBLE
+        }
     }
 
     private fun openDatePicker(viewId: Int){
@@ -181,7 +235,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         if(editDate != null){
             yearDisplay = editDate?.substring(6)!!.toInt()
-            monthDisplay = editDate?.substring(3,5)!!.toInt()
+            monthDisplay = editDate?.substring(3,5)!!.toInt() - 1
             dayDisplay = editDate?.substring(0,2)!!.toInt()
         } else{
             yearDisplay = cal.get(Calendar.YEAR)
@@ -452,6 +506,21 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
                 }
             }
             .subscribe()
+    }
+
+    private fun emptyHomeScreenCheck(): Boolean{
+        var isEmpty = true
+
+        when{
+//            etDate.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeBreakfast.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeSnack1.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeLunch.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeSnack2.text.toString().isNotEmpty() -> isEmpty = false
+            etTimeDinner.text.toString().isNotEmpty() -> isEmpty = false
+        }
+
+        return isEmpty
     }
 
     override fun onClick(view: View?) {

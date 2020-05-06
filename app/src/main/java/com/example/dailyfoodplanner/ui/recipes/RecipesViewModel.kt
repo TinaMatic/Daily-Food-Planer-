@@ -18,15 +18,26 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
 
     var allRecipesLiveData = MutableLiveData<List<Recipes>>()
 
+    var recipeLoading = MutableLiveData<Boolean>()
+
+    var recipeLiveDataError = MutableLiveData<Boolean>()
+
     private var compositeDisposable = CompositeDisposable()
 
     fun loadAllRecipes(){
+        recipeLoading.value = true
+
         compositeDisposable.add(firebaseRepositoryRecipes.loadAllRecipes()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 allRecipesLiveData.postValue(it)
-            },{}))
+                recipeLoading.value = false
+                recipeLiveDataError.value = false
+            },{
+                recipeLoading.value = false
+                recipeLiveDataError.value = true
+            }))
     }
 
     fun writeRecipe(recipe: Recipes):Observable<Boolean>{

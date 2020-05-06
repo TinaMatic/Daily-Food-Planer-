@@ -18,8 +18,8 @@
             android:defaultValue="@null"/>
 
         <action
-            android:id="@+id/openSchedule"
-            app:destination="@id/navigation_schedule"/>
+            android:id="@+id/backToSchedule"
+            app:popUpTo="@id/navigation_schedule" />
 
     </fragment>
 

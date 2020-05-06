@@ -93,6 +93,10 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
             setUpAdapter(listAllNotes)
             notesAdapter?.notifyDataSetChanged()
         })
+
+        notesViewModel.notesLoading.observe(this, Observer {
+            showProgressBarNotes(it)
+        })
     }
 
 
@@ -105,6 +109,16 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
         recyclerViewNotes.layoutManager = LinearLayoutManager(context)
         recyclerViewNotes.adapter = notesAdapter
 
+    }
+
+    private fun showProgressBarNotes(show: Boolean){
+        if(show){
+            progressBarNotes.visibility = View.VISIBLE
+            recyclerViewNotes.visibility = View.INVISIBLE
+        } else{
+            progressBarNotes.visibility = View.INVISIBLE
+            recyclerViewNotes.visibility = View.VISIBLE
+        }
     }
 
     private fun writeNote(note: String){
@@ -183,6 +197,7 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
     private fun showEditText(note: String){
         if(!isEditTextVisible) {
             notesAdapter?.setClickable(false)
+            notesAdapter?.notifyDataSetChanged()
             revealEditText(revealView)
             etTodoNotes.requestFocus()
             etTodoNotes.setText(note)

@@ -26,6 +26,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     var dailyPlanLiveData = MutableLiveData<DailyPlaner>()
     var recipeLiveData = MutableLiveData<List<Recipes>>()
+    var recipeLoading = MutableLiveData<Boolean>()
 
     fun readSingleDailyPlan(dailyPlanId: String){
         compositeDisposable.add(firebaseRepositoryDailyPlaner.readSingleDailyPlan(dailyPlanId)
@@ -65,12 +66,17 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun loadAllRecipes(){
+        recipeLoading.value = true
+
         compositeDisposable.add(firebaseRepositoryRecipes.loadAllRecipes()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 recipeLiveData.postValue(it)
-        },{}))
+                recipeLoading.value = false
+        },{
+                recipeLoading.value = false
+            }))
     }
 
     fun claer(){

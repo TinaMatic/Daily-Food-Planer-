@@ -34,13 +34,10 @@ class NotesViewModel @Inject constructor(): ViewModel() {
                 .subscribe ({
                     notesError.value = false
                     notesLiveData.postValue(it)
+                    notesLoading.value = false
                 },{
                     notesError.value = true
                     notesLoading.value = false
-                },{
-                    notesError.value = false
-                    notesLoading.value = false
-
                 })
         )
     }

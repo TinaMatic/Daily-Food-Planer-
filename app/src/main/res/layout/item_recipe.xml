@@ -59,10 +59,10 @@
                 android:id="@+id/btnDeleteRecipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/btnShowMore"
+                android:layout_toLeftOf="@id/btnEditRecipe"
                 android:layout_alignBottom="@id/btnShowMore"
                 android:layout_marginBottom="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:background="@android:drawable/ic_menu_delete"/>
 
             <ImageButton
@@ -70,10 +70,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/ic_menu_edit"
-                android:layout_toRightOf="@id/btnDeleteRecipe"
+                android:layout_toLeftOf="@id/btnShowMore"
                 android:layout_alignBottom="@id/btnShowMore"
                 android:layout_marginBottom="10dp"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginEnd="10dp"/>
         </RelativeLayout>
 
 

@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
 import com.example.dailyfoodplanner.R
@@ -60,8 +61,7 @@ class SettingsFragment : DaggerFragment() {
 
         settingsViewModel = ViewModelProvider(this, viewModelFactory).get(SettingsViewModel::class.java)
 
-        loadUsername()
-        loadProifileImage()
+        loadUserProfileData()
         setSwitchState()
 
         compositeDisposable.add(tvLogout.clicks().subscribe {
@@ -83,6 +83,7 @@ class SettingsFragment : DaggerFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         compositeDisposable.clear()
+        settingsViewModel.clear()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -96,9 +97,6 @@ class SettingsFragment : DaggerFragment() {
                 .getIntent(context!!)
 
             startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
-//            CropImage.activity(image)
-//                .setAspectRatio(1,1)
-//                .start(requireActivity())
         }
 
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
@@ -109,10 +107,7 @@ class SettingsFragment : DaggerFragment() {
 
                 compositeDisposable.add(settingsViewModel.loadImage(resultUri).subscribe {
                     if (it){
-                        Picasso.with(context)
-                            .load(resultUri)
-                            .placeholder(R.drawable.profile_img)
-                            .into(civProfile)
+                        loadUserProfileData()
                         Toast.makeText(context, "Picture successfully added", Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -123,25 +118,28 @@ class SettingsFragment : DaggerFragment() {
 
     }
 
-    private fun loadUsername(){
-        compositeDisposable.add(settingsViewModel.getUsername()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                tvUsername.text = it.capitalize()
-            })
+    private fun loadUserProfileData(){
+        settingsViewModel.getUserData()
+
+        settingsViewModel.userProfileLiveData.observe(this, Observer {
+            tvUsername.text = it.first.capitalize()
+            Picasso.with(context)
+                .load(it.second)
+                .placeholder(R.drawable.profile_img)
+                .into(civProfile)
+        })
+
+        settingsViewModel.userProfileLoading.observe(this, Observer {
+            showProgressBarSettngs(it)
+        })
     }
 
-    private fun loadProifileImage(){
-        compositeDisposable.add(settingsViewModel.getProfileImage()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                Picasso.with(context)
-                    .load(it)
-                    .placeholder(R.drawable.profile_img)
-                    .into(civProfile)
-            })
+    private fun showProgressBarSettngs(show: Boolean) {
+       if(show){
+           progressBarSettings.visibility = View.VISIBLE
+       } else{
+           progressBarSettings.visibility = View.INVISIBLE
+       }
     }
 
     private fun setSwitchState(){

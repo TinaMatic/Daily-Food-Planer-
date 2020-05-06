@@ -10,7 +10,7 @@ import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
 import kotlinx.android.synthetic.main.item_note.view.*
 
-class NotesAdapter (val context: Context, val notesList: List<Notes>)
+class NotesAdapter (val context: Context, private val notesList: List<Notes>)
     : RecyclerView.Adapter<NotesAdapter.ViewHolder>(){
 
     private var checkedChangeListener: OnCheckedChangeListener? = null
@@ -65,7 +65,6 @@ class NotesAdapter (val context: Context, val notesList: List<Notes>)
                     checkedChangeListener?.onCheckedChange(listOfCheckedNotes)
                 } else{
                     itemView.cbNote.isChecked = false
-                    itemView.cbNote.isClickable = false
                 }
             }
 
