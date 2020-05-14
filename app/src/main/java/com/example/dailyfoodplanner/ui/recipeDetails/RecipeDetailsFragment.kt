@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 
 import com.example.dailyfoodplanner.R
 import dagger.android.support.DaggerFragment
@@ -41,7 +42,6 @@ class RecipeDetailsFragment : DaggerFragment() {
         val recipeId = RecipeDetailsFragmentArgs.fromBundle(arguments!!).recipeId
 
         loadRecipeDeatils(recipeId!!)
-
     }
 
     override fun onDestroyView() {
