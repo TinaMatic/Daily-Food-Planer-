@@ -26,7 +26,6 @@ class NotesViewModel @Inject constructor(): ViewModel() {
     fun loadAllNotes(){
         notesLoading.value = true
 
-
         compositeDisposable.add(
             firebaseRepositoryNotes.loadAllNotes()
                 .subscribeOn(Schedulers.io())

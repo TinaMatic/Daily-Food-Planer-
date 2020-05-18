@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
 import com.example.dailyfoodplanner.R
@@ -27,10 +25,9 @@ import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
+import androidx.lifecycle.Observer
 import java.util.*
-import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
 
 class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeListener {
@@ -80,7 +77,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
 
-        dailyPlanId = HomeFragmentArgs.fromBundle(arguments!!).dailyPlanId
+        dailyPlanId = HomeFragmentArgs.fromBundle(requireArguments()).dailyPlanId
 
         setInitials(dailyPlanId)
 
@@ -114,10 +111,12 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
     override fun onPause() {
         super.onPause()
 
-        if(!emptyHomeScreenCheck()){
-            val destination = findNavController().currentDestination
-            findNavController().popBackStack()
-            leaveScreenDialog(destination!!)
+        if(dailyPlanId.isNullOrEmpty()){
+            if(!emptyHomeScreenCheck()){
+                val destination = findNavController().currentDestination
+                findNavController().popBackStack()
+                leaveScreenDialog(destination!!)
+            }
         }
     }
 
@@ -200,7 +199,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
     private fun loadAllRecipes(){
         homeViewModel.loadAllRecipes()
 
-        homeViewModel.recipeLiveData.observe(this, androidx.lifecycle.Observer {listRecipes->
+        homeViewModel.recipeLiveData.observe(viewLifecycleOwner, Observer { listRecipes->
             listOfRecipes.apply {
                 clear()
                 add("No Recipe")
@@ -212,7 +211,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             adapter.notifyDataSetChanged()
         })
 
-        homeViewModel.recipeLoading.observe(this, androidx.lifecycle.Observer {
+        homeViewModel.recipeLoading.observe(viewLifecycleOwner, Observer {
             showHomeProgressBar(it)
         })
     }
@@ -324,14 +323,14 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
             etTimeSnack2.text.toString(), spinnerSnack2.selectedItem.toString(), etTimeDinner.text.toString(), spinnerDinner.selectedItem.toString())
         val date = etDate.text.toString()
 
-        compositeDisposable.add(homeViewModel.addDailyPlaner(dailyPlaner).subscribe { (isSuccessfull, dailyPlan) ->
-            if (isSuccessfull){
+        compositeDisposable.add(homeViewModel.addDailyPlaner(dailyPlaner).subscribe { (isSuccessful, dailyPlan) ->
+            if (isSuccessful){
                 Toast.makeText(context, "Daily plan was successfully added", Toast.LENGTH_SHORT).show()
-                AlarmScheduler.scheduleAlarmForDailyPlaner(context!!, dailyPlan!!)
+                AlarmScheduler.scheduleAlarmForDailyPlaner(requireContext(), dailyPlan!!)
                 cleanAllFields()
-            } else if (!isSuccessfull && dailyPlan != null){
+            } else if (!isSuccessful && dailyPlan != null){
                 Toast.makeText(context, "Daily Plan with $date date already exists", Toast.LENGTH_LONG).show()
-            } else if(!isSuccessfull && dailyPlan == null){
+            } else if(!isSuccessful && dailyPlan == null){
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         })
@@ -345,17 +344,17 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         compositeDisposable.add(homeViewModel.editDailyPlan(dailyPlaner).subscribe {
             if(it){
                 Toast.makeText(context, "Daily plan was successfully updated", Toast.LENGTH_SHORT).show()
-                AlarmScheduler.scheduleAlarmForDailyPlaner(context!!, dailyPlaner)
+                AlarmScheduler.scheduleAlarmForDailyPlaner(requireContext(), dailyPlaner)
             } else{
                 Toast.makeText(context, "Something went wrong when editing", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    fun loadSingleDailyPlan(dailyPlanId: String){
+    private fun loadSingleDailyPlan(dailyPlanId: String){
         homeViewModel.readSingleDailyPlan(dailyPlanId)
 
-        homeViewModel.dailyPlanLiveData.observe(this, androidx.lifecycle.Observer {
+        homeViewModel.dailyPlanLiveData.observe(viewLifecycleOwner, Observer {
             etDate.setText(it.date)
             etTimeBreakfast.setText(it.timeBreakfast)
             etTimeSnack1.setText(it.timeSnack1)
@@ -512,14 +511,12 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         var isEmpty = true
 
         when{
-//            etDate.text.toString().isNotEmpty() -> isEmpty = false
             etTimeBreakfast.text.toString().isNotEmpty() -> isEmpty = false
             etTimeSnack1.text.toString().isNotEmpty() -> isEmpty = false
             etTimeLunch.text.toString().isNotEmpty() -> isEmpty = false
             etTimeSnack2.text.toString().isNotEmpty() -> isEmpty = false
             etTimeDinner.text.toString().isNotEmpty() -> isEmpty = false
         }
-
         return isEmpty
     }
 
