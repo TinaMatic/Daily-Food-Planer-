@@ -75,7 +75,7 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
     }
 
     fun loadAllDailyPlansForMonth(month: Int){
-        scheduleViewModel.readDailyPlansForMonth(month)
+        scheduleViewModel.getDailyPlansForMonth(month)
 
         scheduleViewModel.dailyPlansForMonthLiveData.observe(this, Observer {
             setScheduleAdapter(it)
@@ -111,7 +111,7 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
             .setMessage(getString(R.string.delete_message))
             .setCancelable(true)
             .setPositiveButton("Yes"){_, _ ->
-                scheduleViewModel.deleteDilyPlan(dailyPlanId).subscribe({
+                scheduleViewModel.deleteDailyPlan(dailyPlanId).subscribe({
                     if (it) {
                         Toast.makeText(context, "Daily Plan successfully deleted", Toast.LENGTH_SHORT).show()
                         scheduleAdapter.listDailyPlansForMonth.removeAt(position)

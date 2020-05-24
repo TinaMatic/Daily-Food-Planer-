@@ -45,8 +45,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.fragment:fragment-ktx:1.2.2'
 
     //navigation
@@ -111,4 +109,12 @@ dependencies {
     testImplementation "android.arch.core:core-testing:1.1.1"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
+    androidTestImplementation 'androidx.test:rules:1.3.0-beta01'
+
+    //UI testing
+    androidTestImplementation "androidx.test:rules:$test_version"
+    androidTestImplementation "androidx.test.ext:truth:$test_version"
+    androidTestImplementation "androidx.test.ext:junit:1.1.1"
+    androidTestImplementation "androidx.test:runner:$test_version"
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
