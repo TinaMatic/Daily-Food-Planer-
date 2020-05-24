@@ -28,9 +28,6 @@ class RecipeDetailsViewModelTest{
     @get:Rule
     val taskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var recipeDetailTest: Observable<Recipes>
-
-
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
@@ -40,11 +37,11 @@ class RecipeDetailsViewModelTest{
     fun getRecipeDetails_success() {
         val recipe = Recipes("recipeId", "title", "description", listOf("ingredients"))
 
-        recipeDetailTest = Observable.just(recipe)
+        val recipeDetailTest = Observable.just(recipe)
 
-        Mockito.`when`(firebaseRepositoryRecipes.loadSingleRecipe("recipeId")).thenReturn(recipeDetailTest)
+        Mockito.`when`(firebaseRepositoryRecipes.getSingleRecipe("recipeId")).thenReturn(recipeDetailTest)
 
-        recipeDetailsViewModel.loadRecipeDetails("recipeId")
+        recipeDetailsViewModel.getRecipeDetails("recipeId")
 
         assertEquals(recipe, recipeDetailsViewModel.recipeDetailsLiveData.value)
     }

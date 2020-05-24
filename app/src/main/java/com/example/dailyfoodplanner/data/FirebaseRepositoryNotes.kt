@@ -17,7 +17,7 @@ class FirebaseRepositoryNotes @Inject constructor() {
 
     private val mAuth = FirebaseAuth.getInstance()
 
-    fun writeNotes(notes: Notes): Observable<Boolean> {
+    fun addNotes(notes: Notes): Observable<Boolean> {
         val currentUserId = mAuth.currentUser!!.uid
         val notesId = notesDatabase.push().key
 
@@ -35,7 +35,7 @@ class FirebaseRepositoryNotes @Inject constructor() {
         }
     }
 
-    fun loadAllNotes(): Observable<List<Notes>> {
+    fun getAllNotes(): Observable<List<Notes>> {
         val currentUserId = mAuth.currentUser!!.uid
 
         return Observable.create<List<Notes>> { emitter ->

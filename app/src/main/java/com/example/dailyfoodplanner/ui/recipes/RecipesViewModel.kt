@@ -1,6 +1,5 @@
 package com.example.dailyfoodplanner.ui.recipes
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dailyfoodplanner.data.FirebaseRepositoryRecipes
@@ -24,10 +23,10 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
 
     private var compositeDisposable = CompositeDisposable()
 
-    fun loadAllRecipes(){
+    fun getAllRecipes(){
         recipeLoading.value = true
 
-        compositeDisposable.add(firebaseRepositoryRecipes.loadAllRecipes()
+        compositeDisposable.add(firebaseRepositoryRecipes.getAllRecipes()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
@@ -40,8 +39,8 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
             }))
     }
 
-    fun writeRecipe(recipe: Recipes):Observable<Boolean>{
-        return firebaseRepositoryRecipes.writeRecipes(recipe)
+    fun addRecipe(recipe: Recipes):Observable<Boolean>{
+        return firebaseRepositoryRecipes.addRecipes(recipe)
     }
 
     fun editRecipe(recipe: Recipes): Observable<Boolean>{
@@ -56,7 +55,7 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
         val searchList = arrayListOf<Recipes>()
 
         return Observable.create<List<Recipes>> { emitter ->
-            firebaseRepositoryRecipes.loadAllRecipes().subscribe ({ listRecipes ->
+            firebaseRepositoryRecipes.getAllRecipes().subscribe ({ listRecipes ->
                 listRecipes.forEach {
                     if (it.title.contains(recipeTitle)) {
                         searchList.add(it)
@@ -67,7 +66,7 @@ class RecipesViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun claer(){
+    fun clear(){
         compositeDisposable.clear()
     }
 }

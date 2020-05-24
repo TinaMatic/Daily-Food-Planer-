@@ -103,7 +103,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         super.onResume()
 
         //set today as default
-        val today = SimpleDateFormat("dd/MM/yy").format(Calendar.getInstance().time)
+        val today = SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
         textInputDate.hint =  "Today, $today"
         etDate.setText(today)
     }
@@ -123,7 +123,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
     override fun onDestroyView() {
         super.onDestroyView()
         compositeDisposable.clear()
-        homeViewModel.claer()
+        homeViewModel.clear()
 
         (activity as MainActivity).shouldEnableBottomNavigation(true)
     }
@@ -175,7 +175,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         }
 
         //set today as default
-        val today = SimpleDateFormat("dd/MM/yy").format(Calendar.getInstance().time)
+        val today = SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
         textInputDate.hint =  "Today, $today"
         etDate.setText(today)
 
@@ -197,7 +197,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
     }
 
     private fun loadAllRecipes(){
-        homeViewModel.loadAllRecipes()
+        homeViewModel.getAllRecipes()
 
         homeViewModel.recipeLiveData.observe(viewLifecycleOwner, Observer { listRecipes->
             listOfRecipes.apply {
@@ -352,7 +352,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
     }
 
     private fun loadSingleDailyPlan(dailyPlanId: String){
-        homeViewModel.readSingleDailyPlan(dailyPlanId)
+        homeViewModel.getSingleDailyPlan(dailyPlanId)
 
         homeViewModel.dailyPlanLiveData.observe(viewLifecycleOwner, Observer {
             etDate.setText(it.date)

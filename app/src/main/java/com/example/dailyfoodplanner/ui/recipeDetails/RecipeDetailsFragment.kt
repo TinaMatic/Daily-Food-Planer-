@@ -49,7 +49,7 @@ class RecipeDetailsFragment : DaggerFragment() {
     }
 
     private fun loadRecipeDetails(recipeId: String){
-        recipeDetailsViewModel.loadRecipeDetails(recipeId)
+        recipeDetailsViewModel.getRecipeDetails(recipeId)
 
         recipeDetailsViewModel.recipeDetailsLiveData.observe(viewLifecycleOwner, Observer {
             tvRecipeTitle.text = it.title

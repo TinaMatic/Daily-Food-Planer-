@@ -21,11 +21,11 @@ class ScheduleViewModel @Inject constructor(): ViewModel() {
     var dailyPlansErrorLiveData: MutableLiveData<Boolean> = MutableLiveData()
     var dailyPlansLoading: MutableLiveData<Boolean> = MutableLiveData()
 
-    fun readDailyPlansForMonth(month: Int){
+    fun getDailyPlansForMonth(month: Int){
 
         dailyPlansLoading.value = true
 
-        compositeDisposable.add(firebaseRepositoryDailyPlaner.readDailyPlansForMonth(month)
+        compositeDisposable.add(firebaseRepositoryDailyPlaner.getDailyPlansForMonth(month)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -43,14 +43,12 @@ class ScheduleViewModel @Inject constructor(): ViewModel() {
             }))
     }
 
-    fun deleteDilyPlan(dailyPlanId: String): Observable<Boolean>{
+    fun deleteDailyPlan(dailyPlanId: String): Observable<Boolean>{
         return firebaseRepositoryDailyPlaner.deleteDailyPlan(dailyPlanId)
     }
-
 
     fun clear(){
         compositeDisposable.clear()
         firebaseRepositoryDailyPlaner.clean()
     }
-
 }

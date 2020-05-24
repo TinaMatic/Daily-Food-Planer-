@@ -2,7 +2,6 @@ package com.example.dailyfoodplanner.ui.notes
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.dailyfoodplanner.data.FirebaseRepositoryDailyPlaner
 import com.example.dailyfoodplanner.data.FirebaseRepositoryNotes
 import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
@@ -23,11 +22,11 @@ class NotesViewModel @Inject constructor(): ViewModel() {
 
     private var compositeDisposable = CompositeDisposable()
 
-    fun loadAllNotes(){
+    fun getAllNotes(){
         notesLoading.value = true
 
         compositeDisposable.add(
-            firebaseRepositoryNotes.loadAllNotes()
+            firebaseRepositoryNotes.getAllNotes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({
@@ -41,8 +40,8 @@ class NotesViewModel @Inject constructor(): ViewModel() {
         )
     }
 
-    fun writeNote(note: Notes): Observable<Boolean>{
-        return firebaseRepositoryNotes.writeNotes(note)
+    fun addNote(note: Notes): Observable<Boolean>{
+        return firebaseRepositoryNotes.addNotes(note)
     }
 
     fun deleteNote(listOfNotes: List<CheckedNotes>): Observable<Boolean>{

@@ -81,12 +81,12 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        recipeViewModel.claer()
+        recipeViewModel.clear()
         compositeDisposable.clear()
     }
 
     fun loadAllRecipes(){
-        recipeViewModel.loadAllRecipes()
+        recipeViewModel.getAllRecipes()
 
         recipeViewModel.allRecipesLiveData.observe(this, Observer {
             setRecipeAdapter(it)
@@ -122,7 +122,7 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
 
                 val recipeIngredientsList = recipeIngredients?.split(",")?.toList()
 
-                compositeDisposable.add(recipeViewModel.writeRecipe(Recipes(null, recipeTitle!!, recipeDescription!!, recipeIngredientsList!!))
+                compositeDisposable.add(recipeViewModel.addRecipe(Recipes(null, recipeTitle!!, recipeDescription!!, recipeIngredientsList!!))
                     .subscribe ({
                         if (it){
                             Toast.makeText(context, "Recipe successfully added", Toast.LENGTH_SHORT).show()
