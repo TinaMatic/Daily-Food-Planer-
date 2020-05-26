@@ -124,9 +124,9 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     if(it){
-                        Toast.makeText(context, "Note successfully added", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.note_successfully_added), Toast.LENGTH_SHORT).show()
                     }else{
-                        Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
                     }
                 })
         }
@@ -139,9 +139,9 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
                 if(it){
                     btnDeleteNotes.visibility = View.INVISIBLE
                     btnAddNotes.visibility = View.VISIBLE
-                    Toast.makeText(context, "Notes successfully deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.note_successfully_deleted), Toast.LENGTH_SHORT).show()
                 } else{
-                    Toast.makeText(context, "Something went wrong when deleting", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.error_message_deleting), Toast.LENGTH_SHORT).show()
                 }
             }
         )

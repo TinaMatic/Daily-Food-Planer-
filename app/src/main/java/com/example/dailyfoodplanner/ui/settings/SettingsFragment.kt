@@ -26,9 +26,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import dagger.android.support.DaggerFragment
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
@@ -72,7 +70,6 @@ class SettingsFragment : DaggerFragment() {
         compositeDisposable.add(civProfile.clicks().subscribe {
             openGallery()
         })
-
     }
 
     override fun onResume() {
@@ -94,7 +91,7 @@ class SettingsFragment : DaggerFragment() {
 
             val intent = CropImage.activity(image)
                 .setAspectRatio(1,1)
-                .getIntent(context!!)
+                .getIntent(requireContext())
 
             startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
         }
@@ -108,11 +105,11 @@ class SettingsFragment : DaggerFragment() {
                 compositeDisposable.add(settingsViewModel.loadImage(resultUri).subscribe {
                     if (it){
                         loadUserProfileData()
-                        Toast.makeText(context, "Picture successfully added", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.picture_successfully_added), Toast.LENGTH_SHORT).show()
                     }
                 })
             } else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
-                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -121,7 +118,7 @@ class SettingsFragment : DaggerFragment() {
     private fun loadUserProfileData(){
         settingsViewModel.getUserData()
 
-        settingsViewModel.userProfileLiveData.observe(this, Observer {
+        settingsViewModel.userProfileLiveData.observe(viewLifecycleOwner, Observer {
             tvUsername.text = it.first.capitalize()
             Picasso.with(context)
                 .load(it.second)
@@ -129,12 +126,12 @@ class SettingsFragment : DaggerFragment() {
                 .into(civProfile)
         })
 
-        settingsViewModel.userProfileLoading.observe(this, Observer {
-            showProgressBarSettngs(it)
+        settingsViewModel.userProfileLoading.observe(viewLifecycleOwner, Observer {
+            showProgressBarSettings(it)
         })
     }
 
-    private fun showProgressBarSettngs(show: Boolean) {
+    private fun showProgressBarSettings(show: Boolean) {
        if(show){
            progressBarSettings.visibility = View.VISIBLE
        } else{
@@ -143,7 +140,7 @@ class SettingsFragment : DaggerFragment() {
     }
 
     private fun setSwitchState(){
-        if (NotificationManagerCompat.from(context!!).areNotificationsEnabled()){
+        if (NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()){
             notificationsSwitch.isChecked = sharedPreferences.getBoolean(PUSH_NOTIFICATIONS_ENABLED, true)
             notificationsSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
                 if(isChecked){
@@ -174,13 +171,13 @@ class SettingsFragment : DaggerFragment() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(context?.getString(R.string.notification_dialog_title))
             .setMessage(context?.getString(R.string.notification_dialog_message))
-            .setPositiveButton("Yes"){dialog, which ->
+            .setPositiveButton(getString(R.string.btn_yes)){dialog, which ->
                 sharedPreferences.edit()
                     .putBoolean(PUSH_NOTIFICATIONS_ENABLED, true)
                     .apply()
 
                 openNotificationsSettings()
-            }.setNegativeButton("No"){dialog, which->
+            }.setNegativeButton(getString(R.string.btn_no)){dialog, which->
                 notificationsSwitch.isChecked = false
                 sharedPreferences.edit()
                     .putBoolean(PUSH_NOTIFICATIONS_ENABLED, false)

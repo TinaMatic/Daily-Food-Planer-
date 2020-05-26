@@ -104,7 +104,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         //set today as default
         val today = SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
-        textInputDate.hint =  "Today, $today"
+        textInputDate.hint =  getString(R.string.today) + " $today"
         etDate.setText(today)
     }
 
@@ -132,12 +132,12 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         val builder = AlertDialog.Builder(context)
         builder.setTitle(getString(R.string.leave_screen_dialog_title))
             .setMessage(getString(R.string.leave_screen_dialog_message))
-            .setPositiveButton("Yes"){dialog,_ ->
+            .setPositiveButton(getString(R.string.btn_yes)){dialog,_ ->
                 cleanAllFields()
                 findNavController().popBackStack()
                 findNavController().navigate(destination.id)
             }
-            .setNegativeButton("No"){dialog,_ ->
+            .setNegativeButton(getString(R.string.btn_no)){dialog,_ ->
                 dialog.cancel()
             }
 
@@ -176,7 +176,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         //set today as default
         val today = SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
-        textInputDate.hint =  "Today, $today"
+        textInputDate.hint =  getString(R.string.today) + " $today"
         etDate.setText(today)
 
         //set onClick listeners
@@ -202,7 +202,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         homeViewModel.recipeLiveData.observe(viewLifecycleOwner, Observer { listRecipes->
             listOfRecipes.apply {
                 clear()
-                add("No Recipe")
+                add(getString(R.string.no_recipe))
             }
             listRecipes.forEach {
                 listOfRecipes.add(it.title)
@@ -325,13 +325,13 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         compositeDisposable.add(homeViewModel.addDailyPlaner(dailyPlaner).subscribe { (isSuccessful, dailyPlan) ->
             if (isSuccessful){
-                Toast.makeText(context, "Daily plan was successfully added", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.daily_plan_successfully_added), Toast.LENGTH_SHORT).show()
                 AlarmScheduler.scheduleAlarmForDailyPlaner(requireContext(), dailyPlan!!)
                 cleanAllFields()
             } else if (!isSuccessful && dailyPlan != null){
-                Toast.makeText(context, "Daily Plan with $date date already exists", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.daily_plan_exist, date), Toast.LENGTH_LONG).show()
             } else if(!isSuccessful && dailyPlan == null){
-                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -343,10 +343,10 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         compositeDisposable.add(homeViewModel.editDailyPlan(dailyPlaner).subscribe {
             if(it){
-                Toast.makeText(context, "Daily plan was successfully updated", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.daily_plan_successfully_updated), Toast.LENGTH_SHORT).show()
                 AlarmScheduler.scheduleAlarmForDailyPlaner(requireContext(), dailyPlaner)
             } else{
-                Toast.makeText(context, "Something went wrong when editing", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.error_message_edit), Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -392,42 +392,42 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
         var isValid = true
 
         if(etDate.text.toString().isEmpty()){
-            textInputDate.error = "Date is mandatory"
+            textInputDate.error = getString(R.string.date_mandatory)
             isValid = false
         } else{
             textInputDate.isErrorEnabled = false
         }
 
         if(etTimeBreakfast.text.toString().isEmpty()){
-            textInputBreakfast.error = "Breakfast time is mandatory"
+            textInputBreakfast.error = getString(R.string.breakfast_time_mandatory)
             isValid = false
         } else{
             textInputBreakfast.isErrorEnabled = false
         }
 
         if(etTimeSnack1.text.toString().isEmpty()){
-            textInputSnack1.error = "Snack time is mandatory"
+            textInputSnack1.error = getString(R.string.snack_time_mandatory)
             isValid = false
         }  else{
             textInputSnack1.isErrorEnabled = false
         }
 
         if(etTimeLunch.text.toString().isEmpty()){
-            textInputLunch.error = "Lunch time is mandatory"
+            textInputLunch.error = getString(R.string.lunch_time_mandatory)
             isValid = false
         } else{
             textInputLunch.isErrorEnabled = false
         }
 
         if(etTimeSnack2.text.toString().isEmpty()){
-            textInputSnack2.error = "Snack time is mandatory"
+            textInputSnack2.error = getString(R.string.snack_time_mandatory)
             isValid = false
         } else{
             textInputSnack2.isErrorEnabled = false
         }
 
         if(etTimeDinner.text.toString().isEmpty()){
-            textInputDinner.error = "Dinner time is mandatory"
+            textInputDinner.error = getString(R.string.dinner_time_mandatory)
             isValid = false
         } else{
             textInputDinner.isErrorEnabled = false
@@ -446,7 +446,7 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
                 if(it.isNotEmpty()){
                     textInputDate.error = ""
                 } else{
-                    textInputDate.error = "Date is mandatory"
+                    textInputDate.error = getString(R.string.date_mandatory)
                 }
             }
             .subscribe()
