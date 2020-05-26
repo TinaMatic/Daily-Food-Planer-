@@ -88,17 +88,17 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
     fun loadAllRecipes(){
         recipeViewModel.getAllRecipes()
 
-        recipeViewModel.allRecipesLiveData.observe(this, Observer {
+        recipeViewModel.allRecipesLiveData.observe(viewLifecycleOwner, Observer {
             setRecipeAdapter(it)
             recipeAdapter.notifyDataSetChanged()
         })
 
-        recipeViewModel.recipeLoading.observe(this, Observer {
+        recipeViewModel.recipeLoading.observe(viewLifecycleOwner, Observer {
             showProgressBarRecipe(it)
         })
     }
 
-    fun setRecipeAdapter(listRecipes: List<Recipes>){
+     private fun setRecipeAdapter(listRecipes: List<Recipes>){
         recipeAdapter = RecipesAdapter(requireContext(), ArrayList(listRecipes))
         recipeAdapter.setOnItemClickListener(this)
 
@@ -125,10 +125,10 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
                 compositeDisposable.add(recipeViewModel.addRecipe(Recipes(null, recipeTitle!!, recipeDescription!!, recipeIngredientsList!!))
                     .subscribe ({
                         if (it){
-                            Toast.makeText(context, "Recipe successfully added", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, getString(R.string.recipe_successfully_added), Toast.LENGTH_SHORT).show()
                             loadAllRecipes()
                         } else{
-                            Toast.makeText(context, "Something went wrong when adding", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
                         }
                     },{}))
 
@@ -160,11 +160,11 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
 
                 compositeDisposable.add(recipeViewModel.editRecipe(tempRecipeObject).subscribe {
                     if(it){
-                        Toast.makeText(context, "Recipe successfully updated", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.recipe_successfully_updated), Toast.LENGTH_SHORT).show()
                         recipeAdapter.listRecipes[position] = tempRecipeObject
                         recipeAdapter.notifyItemChanged(position)
                     } else{
-                        Toast.makeText(context, "Something went wrong when editing", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.error_message_edit), Toast.LENGTH_SHORT).show()
                     }
                 })
 
@@ -190,19 +190,19 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(getString(R.string.delete_title))
             .setMessage(getString(R.string.delete_message))
-            .setPositiveButton("Yes"){_,_ ->
+            .setPositiveButton(getString(R.string.btn_yes)){_,_ ->
                 compositeDisposable.add(recipeViewModel.deleteRecipe(recipeId).subscribe ({
                     if(it){
-                        Toast.makeText(context, "Recipe successfully deleted", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.recipe_successfully_deleted), Toast.LENGTH_SHORT).show()
                         recipeAdapter.listRecipes.removeAt(position)
                         recipeAdapter.notifyItemRemoved(position)
                         recipeAdapter.notifyDataSetChanged()
                     } else{
-                        Toast.makeText(context, "Something went wrong when deleting", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.error_message_deleting), Toast.LENGTH_SHORT).show()
                     }
                 },{}))
             }
-            .setNegativeButton("No"){_,_ ->
+            .setNegativeButton(getText(R.string.btn_no)){_,_ ->
                 //do nothing
             }
 
@@ -220,7 +220,7 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
         }
     }
 
-    fun createButtonClickSearch(): Observable<String>{
+    private fun createButtonClickSearch(): Observable<String>{
         return Observable.create{emitter ->
             btnSearch.setOnClickListener {
                 emitter.onNext(etSearchRecipe.text.toString())
@@ -234,7 +234,7 @@ class RecipesFragment : DaggerFragment(), RecipesAdapter.OnItemClickListener {
         }
     }
 
-    fun createTextChangeSearch(): Observable<String>{
+    private fun createTextChangeSearch(): Observable<String>{
         val textChangeObservable = Observable.create<String> {emitter ->
             val textWatcher = object: TextWatcher{
                 override fun afterTextChanged(s: Editable?){

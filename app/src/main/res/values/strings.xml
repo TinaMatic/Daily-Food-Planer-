@@ -1,5 +1,20 @@
 <resources>
-    <string name="app_name">Daily Food Planner</string>
+    <string name="app_name" translatable="false">Daily Food Planner</string>
+
+    <!--Basic-->
+    <string name="btn_no">No</string>
+    <string name="btn_yes">Yes</string>
+    <string name="error_message">Something went wrong</string>
+    <string name="error_message_edit">Something went wrong when editing</string>
+    <string name="error_message_deleting">Something went wrong when deleting</string>
+
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
 
     <!--Navigation titles-->
     <string name="title_home">Home</string>
@@ -10,38 +25,64 @@
     <string name="title_schedule_edit">Edit Schedule</string>
     <string name="title_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!--Home screen-->
     <string name="date">Date</string>
+    <string name="time">Time</string>
     <string name="breakfast">Breakfast</string>
     <string name="snack1">Snack 1</string>
     <string name="lunch">Lunch</string>
     <string name="snack2">Snack 2</string>
     <string name="dinner">Dinner</string>
-    <string name="btnSubmit">Submit</string>
     <string name="leave_screen_dialog_title">Leaving</string>
     <string name="leave_screen_dialog_message">Are you sure you want to leave the Home screen?</string>
+    <string name="no_recipe">No Recipe</string>
+    <string name="today">Today,</string>
+    <string name="daily_plan_successfully_added">Daily plan successfully added</string>
+    <string name="daily_plan_successfully_updated">Daily plan successfully updated</string>
+    <string name="daily_plan_exist">Daily Plan with %1$s date already exists</string>
+    <string name="date_mandatory">Date is mandatory</string>
+    <string name="breakfast_time_mandatory">Breakfast time is mandatory</string>
+    <string name="snack_time_mandatory">Snack time is mandatory</string>
+    <string name="lunch_time_mandatory">Lunch time is mandatory</string>
+    <string name="dinner_time_mandatory">Dinner time is mandatory</string>
+
 
     <!--Notes screen-->
     <string name="notesTitle">Notes:</string>
     <string name="myNotes">My Notes</string>
+    <string name="note_successfully_added">Note successfully added</string>
+    <string name="note_successfully_deleted">Notes successfully deleted</string>
 
     <!--Schedule screen-->
     <string name="month_label">Month:</string>
     <string name="delete_title">Delete</string>
     <string name="delete_message">Are you sure you want to delete?</string>
+    <string name="daily_plan_successfully_deleted">Daily Plan successfully deleted</string>
+
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
 
     <!--Notifications-->
     <string name="notification_title">Daily Food Plan Notification</string>
-    <string name="action_notify_daily_planer">com.example.dailyfoodplanner.action.DAILY_PLANER</string>
-    <string name="action_notify_daily_receiver">com.example.dailyfoodplanner.action.DAILY_RECEIVER</string>
+    <string name="action_notify_daily_planer" translatable="false">com.example.dailyfoodplanner.action.DAILY_PLANER</string>
+    <string name="action_notify_daily_receiver" translatable="false">com.example.dailyfoodplanner.action.DAILY_RECEIVER</string>
     <string name="notification_description">Time to eat</string>
-    <string name="daily_planer">Daily Planer</string>
+    <string name="daily_planer" translatable="false">Daily Planer</string>
 
     <!--Recipes screen-->
-    <string name="exaplme_recipe_description">Lorem Ipsum is simply dummy text of the printing and
+    <string name="example_recipe_description" translatable="false">Lorem Ipsum is simply dummy text of the printing and
         typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since
         the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
         specimen book. It has survived not only five centuries, but also the leap into electronic
@@ -60,27 +101,20 @@
     <string name="cancel_recipe">Cancel</string>
     <string name="edit_recipe_title">Edit Recipe</string>
     <string name="update_recipe">Update</string>
+    <string name="recipe_successfully_added">Recipe successfully added</string>
+    <string name="recipe_successfully_updated">Recipe successfully updated</string>
+    <string name="recipe_successfully_deleted">Recipe successfully deleted</string>
 
     <!--Recipe Details screen-->
     <string name="recipe_details_description">Description:</string>
     <string name="recipe_details_ingredients">Ingredients:</string>
-
-    <!--Notifications-->
-    <string-array name="days">
-        <item>Sunday</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-    </string-array>
 
     <!--Settings Screen-->
     <string name="notifications_label">Turn notifications ON/OFF</string>
     <string name="logout">Logout</string>
     <string name="notification_dialog_title">Change notification settings</string>
     <string name="notification_dialog_message">To change notification settings go to the phone settings</string>
+    <string name="picture_successfully_added">Picture successfully added</string>
 
     <!--Login and Register screen-->
     <string name="email_hint">Email</string>
@@ -89,6 +123,8 @@
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
     <string name="register">No Account? Register here</string>
-
+    <string name="email_mandatory">Email is mandatory</string>
+    <string name="password_mandatory">Password is mandatory</string>
+    <string name="username_mandatory">Username is mandatory</string>
 
 </resources>

@@ -56,8 +56,7 @@ class RegisterActivity : DaggerAppCompatActivity() {
                 if(it){
                     loginIntoApp()
                 }  else{
-                    Toast.makeText(this, "Something when wrong", Toast.LENGTH_SHORT).show()
-
+                    Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
                 }
             })
     }
@@ -66,21 +65,21 @@ class RegisterActivity : DaggerAppCompatActivity() {
         var isValid = true
 
         if(etUsernameRegister.text.toString().isEmpty()){
-            textInputUsernameRegister.error = "Username is mandatory"
+            textInputUsernameRegister.error = getString(R.string.username_mandatory)
             isValid = false
         } else{
             textInputUsernameRegister.isErrorEnabled = false
         }
 
         if(etEmailRegister.text.toString().isEmpty()){
-            textInputEmailRegister.error = "Email is mandatory"
+            textInputEmailRegister.error = getString(R.string.email_mandatory)
             isValid = false
         } else{
             textInputEmailRegister.isErrorEnabled = false
         }
 
         if(etPasswordRegister.text.toString().isEmpty()){
-            textInputPasswordRegister.error = "Password is mandatory"
+            textInputPasswordRegister.error = getString(R.string.password_mandatory)
             isValid = false
         } else{
             textInputPasswordRegister.isErrorEnabled = false
@@ -98,7 +97,7 @@ class RegisterActivity : DaggerAppCompatActivity() {
                 if(it.isNotEmpty()){
                     textInputUsernameRegister.error = ""
                 } else{
-                    textInputUsernameRegister.error = "Username is mandatory"
+                    textInputUsernameRegister.error = getString(R.string.username_mandatory)
                 }
             }
             .subscribe()

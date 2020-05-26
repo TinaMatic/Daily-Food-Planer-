@@ -48,7 +48,7 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
 
         scheduleViewModel = ViewModelProvider(this, viewModelFactory).get(ScheduleViewModel::class.java)
 
-        val monthList = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+        val monthList = resources.getStringArray(R.array.months)
         val adapter = ArrayAdapter(requireContext(), R.layout.list_months, monthList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         monthSpinner.adapter = adapter
@@ -87,7 +87,7 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
         })
     }
 
-    fun setScheduleAdapter(listOfDailyPlans: List<DailyPlaner>){
+    private fun setScheduleAdapter(listOfDailyPlans: List<DailyPlaner>){
         scheduleAdapter = ScheduleAdapter(requireContext(), ArrayList(listOfDailyPlans))
         scheduleAdapter.setOnItemClickListener(this)
 
@@ -110,20 +110,20 @@ class ScheduleFragment : DaggerFragment(), ScheduleAdapter.OnItemClickListener {
         builder.setTitle(getString(R.string.delete_title))
             .setMessage(getString(R.string.delete_message))
             .setCancelable(true)
-            .setPositiveButton("Yes"){_, _ ->
+            .setPositiveButton(getString(R.string.btn_yes)){_, _ ->
                 scheduleViewModel.deleteDailyPlan(dailyPlanId).subscribe({
                     if (it) {
-                        Toast.makeText(context, "Daily Plan successfully deleted", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.daily_plan_successfully_deleted), Toast.LENGTH_SHORT).show()
                         scheduleAdapter.listDailyPlansForMonth.removeAt(position)
                         scheduleAdapter.notifyItemRemoved(position)
                         scheduleAdapter.notifyDataSetChanged()
-                        AlarmScheduler.removeAlarmsForDailyPlaner(context!!, dailyPlanId)
+                        AlarmScheduler.removeAlarmsForDailyPlaner(requireContext(), dailyPlanId)
                     } else {
-                        Toast.makeText(context, "Something went wrong when deleting", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.error_message_deleting), Toast.LENGTH_SHORT).show()
                     }
                 }, {})
             }
-            .setNegativeButton("No") { _, _ ->
+            .setNegativeButton(getString(R.string.btn_no)) { _, _ ->
                 //do nothing
             }
 

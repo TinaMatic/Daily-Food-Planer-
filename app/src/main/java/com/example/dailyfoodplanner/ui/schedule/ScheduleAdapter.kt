@@ -39,7 +39,7 @@ class ScheduleAdapter (val context: Context, val listDailyPlansForMonth: ArrayLi
 
         fun bindView(dailyPlan: DailyPlaner, position: Int){
             val dayOfWeekNum = convertDateToCalendarObject(dailyPlan.date).get(Calendar.DAY_OF_WEEK)
-            val dayOfWeek = getDayOfWeek(dayOfWeekNum)
+            val dayOfWeek = getDayOfWeek(dayOfWeekNum, context)
 
             itemView.tvDate.text = "$dayOfWeek, ${dailyPlan.date}"
 

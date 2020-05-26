@@ -86,7 +86,7 @@ class LoginActivity : DaggerAppCompatActivity() {
                 if(it){
                     loginIntoApp()
                 } else{
-                    Toast.makeText(this, "Something when wrong", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
                 }
             })
     }
@@ -95,14 +95,14 @@ class LoginActivity : DaggerAppCompatActivity() {
         var isValid = true
 
         if(etEmailLogin.text.toString().isEmpty()){
-            textInputEmailLogin.error = "Email is mandatory"
+            textInputEmailLogin.error = getString(R.string.email_mandatory)
             isValid = false
         } else{
             textInputEmailLogin.isErrorEnabled = false
         }
 
         if(etPasswordLogin.text.toString().isEmpty()){
-            textInputPasswordLogin.error = "Password is mandatory"
+            textInputPasswordLogin.error = getString(R.string.password_mandatory)
             isValid = false
         } else{
             textInputPasswordLogin.isErrorEnabled = false
