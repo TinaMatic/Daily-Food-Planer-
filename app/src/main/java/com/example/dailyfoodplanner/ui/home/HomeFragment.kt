@@ -76,7 +76,6 @@ class HomeFragment : DaggerFragment(), View.OnClickListener, View.OnFocusChangeL
 
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
-
         dailyPlanId = HomeFragmentArgs.fromBundle(requireArguments()).dailyPlanId
 
         setInitials(dailyPlanId)

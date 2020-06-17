@@ -50,8 +50,8 @@ dependencies {
     //navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
-    implementation "androidx.navigation:navigation-fragment:$navigation_version"
-    implementation "androidx.navigation:navigation-ui:$navigation_version"
+//    implementation "androidx.navigation:navigation-fragment:$navigation_version"
+//    implementation "androidx.navigation:navigation-ui:$navigation_version"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     //RxJava

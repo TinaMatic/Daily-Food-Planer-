@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 import javax.inject.Inject
 
 class RegisterActivity : DaggerAppCompatActivity() {
-//
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -27,6 +27,8 @@ class RegisterActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        supportActionBar?.title = getString(R.string.register)
 
         registerViewModel = ViewModelProvider(this, viewModelFactory).get(RegisterViewModel::class.java)
 

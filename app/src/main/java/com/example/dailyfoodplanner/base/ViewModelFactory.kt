@@ -17,7 +17,7 @@ class ViewModelFactory
             it[modelClass]?.get()?.let { viewModel ->
                 return viewModel as T
             }
-            throw IllegalArgumentException("Unkown ViewModel Type")
+            throw IllegalArgumentException("Unknown ViewModel Type")
         }
     }
 }

@@ -23,7 +23,7 @@ object NotificationHelper {
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         return NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_logo)
             .setContentTitle(context.getString(R.string.notification_description))
             .setContentText(mealType.capitalize())
             .setPriority(NotificationCompat.PRIORITY_HIGH)

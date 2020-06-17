@@ -109,9 +109,9 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Šifra</string>
     <string name="username_hint">Korisničko ime</string>
-    <string name="login_button">Login</string>
-    <string name="register_button">Registruj se</string>
-    <string name="register">Nemaš nalog? Registruj se ovde</string>
+    <string name="login">Login</string>
+    <string name="register">Registruj se</string>
+    <string name="no_account_register">Nemaš nalog? Registruj se ovde</string>
     <string name="email_mandatory">Email je obavezan</string>
     <string name="password_mandatory">Šifra je obavezna</string>
     <string name="username_mandatory">Korisničko ime je obavezno</string>

@@ -120,9 +120,9 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="username_hint">Username</string>
-    <string name="login_button">Login</string>
-    <string name="register_button">Register</string>
-    <string name="register">No Account? Register here</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="no_account_register">No Account? Register here</string>
     <string name="email_mandatory">Email is mandatory</string>
     <string name="password_mandatory">Password is mandatory</string>
     <string name="username_mandatory">Username is mandatory</string>

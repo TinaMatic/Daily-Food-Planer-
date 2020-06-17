@@ -32,7 +32,7 @@ class  MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     private var currentDestination: Int? = null
 
