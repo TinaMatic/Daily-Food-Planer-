@@ -3,8 +3,6 @@ package com.example.dailyfoodplanner.data
 import android.util.Log
 import com.example.dailyfoodplanner.constants.Constants.Companion.DAILY_PLANER_DATABASE
 import com.example.dailyfoodplanner.model.DailyPlaner
-import com.example.dailyfoodplanner.model.Notes
-import com.example.dailyfoodplanner.notification.AlarmScheduler
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -23,7 +21,7 @@ class FirebaseRepositoryDailyPlaner @Inject constructor() {
 
     var compositeDisposable = CompositeDisposable()
 
-    fun writeDailyPlaner(dailyPlaner: DailyPlaner): Observable<Pair<Boolean, DailyPlaner?>>{
+    fun addDailyPlaner(dailyPlaner: DailyPlaner): Observable<Pair<Boolean, DailyPlaner?>>{
         val currentUserId = mAuth.currentUser!!.uid
         val messageId = dailyPlanerDatabase.push().key
 
@@ -43,7 +41,7 @@ class FirebaseRepositoryDailyPlaner @Inject constructor() {
         }
     }
 
-    fun readAllDailyPlans(): Observable<List<DailyPlaner>>{
+    fun getAllDailyPlans(): Observable<List<DailyPlaner>>{
         val currentUserId = mAuth.currentUser!!.uid
         return Observable.create<List<DailyPlaner>> {emitter ->
             val listOfDailyPlans = arrayListOf<DailyPlaner>()
@@ -84,7 +82,7 @@ class FirebaseRepositoryDailyPlaner @Inject constructor() {
         }
     }
 
-    fun readSingleDailyPlan(dailyPlanId: String):Observable<DailyPlaner>{
+    fun getSingleDailyPlan(dailyPlanId: String):Observable<DailyPlaner>{
         val currentUserId = mAuth.currentUser!!.uid
 
         return Observable.create<DailyPlaner> {emitter ->
@@ -119,12 +117,12 @@ class FirebaseRepositoryDailyPlaner @Inject constructor() {
         }
     }
 
-    fun readDailyPlansForMonth(month: Int): Observable<List<DailyPlaner>>{
+    fun getDailyPlansForMonth(month: Int): Observable<List<DailyPlaner>>{
 
         return Observable.create<List<DailyPlaner>> {emitter ->
             val listOfDailyPlans = arrayListOf<DailyPlaner>()
 
-            compositeDisposable.add(readAllDailyPlans().subscribe ({dailyPlans->
+            compositeDisposable.add(getAllDailyPlans().subscribe ({ dailyPlans->
                 dailyPlans.forEach {
                     if(it.date.substring(3,5).toInt().equals(month)){
                         listOfDailyPlans.add(it)

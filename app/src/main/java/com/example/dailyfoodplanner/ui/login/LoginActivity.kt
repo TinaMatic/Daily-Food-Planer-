@@ -16,7 +16,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_register.tvRegister
 import javax.inject.Inject
 
 class LoginActivity : DaggerAppCompatActivity() {
@@ -32,7 +31,7 @@ class LoginActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        supportActionBar?.title = "Login"
+        supportActionBar?.title = getString(R.string.login)
 
         loginViewModel = ViewModelProvider(this, viewModelFactory).get(LoginViewModel::class.java)
 
@@ -86,7 +85,7 @@ class LoginActivity : DaggerAppCompatActivity() {
                 if(it){
                     loginIntoApp()
                 } else{
-                    Toast.makeText(this, "Something when wrong", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
                 }
             })
     }
@@ -95,14 +94,14 @@ class LoginActivity : DaggerAppCompatActivity() {
         var isValid = true
 
         if(etEmailLogin.text.toString().isEmpty()){
-            textInputEmailLogin.error = "Email is mandatory"
+            textInputEmailLogin.error = getString(R.string.email_mandatory)
             isValid = false
         } else{
             textInputEmailLogin.isErrorEnabled = false
         }
 
         if(etPasswordLogin.text.toString().isEmpty()){
-            textInputPasswordLogin.error = "Password is mandatory"
+            textInputPasswordLogin.error = getString(R.string.password_mandatory)
             isValid = false
         } else{
             textInputPasswordLogin.isErrorEnabled = false

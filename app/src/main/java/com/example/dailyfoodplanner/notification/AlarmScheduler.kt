@@ -16,7 +16,7 @@ import com.example.dailyfoodplanner.constants.Constants.Companion.SNACK2_REQUEST
 import com.example.dailyfoodplanner.model.DailyPlaner
 import com.example.dailyfoodplanner.utils.DateTimeUtils
 import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.getHourForMeal
-import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.getMinuteForMeail
+import com.example.dailyfoodplanner.utils.DateTimeUtils.Companion.getMinuteForMeal
 import java.util.*
 
 object AlarmScheduler {
@@ -56,7 +56,7 @@ object AlarmScheduler {
         val month = dailyPlaner.date.substring(3, 5).toInt()
         val year = dailyPlaner.date.substring(6).toInt()
         val hour = getHourForMeal(dailyPlaner, typeOfMeal)
-        val minute = getMinuteForMeail(dailyPlaner, typeOfMeal)
+        val minute = getMinuteForMeal(dailyPlaner, typeOfMeal)
 
         //set up the time to schedule the alarm
         val dateTimeAlarm = Calendar.getInstance()

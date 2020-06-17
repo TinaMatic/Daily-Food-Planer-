@@ -131,7 +131,7 @@
                     android:layout_alignTop="@id/tvBreakfast"
                     android:layout_marginTop="25dp"
                     app:startIconDrawable="@drawable/clock"
-                    android:hint="Time"
+                    android:hint="@string/time"
                     app:endIconMode="clear_text"
                     android:layout_below="@id/tvBreakfast">
 
@@ -160,7 +160,6 @@
                     android:spinnerMode="dropdown" />
 
             </RelativeLayout>
-
 
 
             <RelativeLayout
@@ -195,7 +194,7 @@
                     android:layout_alignTop="@id/tvSnack1"
                     android:layout_marginTop="25dp"
                     app:startIconDrawable="@drawable/clock"
-                    android:hint="Time"
+                    android:hint="@string/time"
                     app:endIconMode="clear_text"
                     android:layout_below="@id/tvSnack1">
 
@@ -258,7 +257,7 @@
                     android:layout_alignTop="@id/tvLunch"
                     android:layout_marginTop="25dp"
                     app:startIconDrawable="@drawable/clock"
-                    android:hint="Time"
+                    android:hint="@string/time"
                     app:endIconMode="clear_text"
                     android:layout_below="@id/tvLunch">
 
@@ -321,7 +320,7 @@
                     android:layout_alignTop="@id/tvSnack2"
                     android:layout_marginTop="25dp"
                     app:startIconDrawable="@drawable/clock"
-                    android:hint="Time"
+                    android:hint="@string/time"
                     app:endIconMode="clear_text"
                     android:layout_below="@id/tvSnack2">
 
@@ -384,7 +383,7 @@
                     android:layout_alignTop="@id/tvDinner"
                     android:layout_marginTop="25dp"
                     app:startIconDrawable="@drawable/clock"
-                    android:hint="Time"
+                    android:hint="@string/time"
                     app:endIconMode="clear_text"
                     android:layout_below="@id/tvDinner">
 
@@ -423,5 +422,4 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
-
 </RelativeLayout>

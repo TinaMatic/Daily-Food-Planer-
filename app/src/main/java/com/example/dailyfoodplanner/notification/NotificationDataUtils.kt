@@ -8,7 +8,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
-import javax.inject.Inject
 
 object NotificationDataUtils {
 
@@ -31,7 +30,7 @@ object NotificationDataUtils {
 
     //load all data from the database to schedule the alarms
     fun loadAllDailyPlaners(): Observable<List<DailyPlaner>>  {
-        return firebaseRepositoryDailyPlaner.readAllDailyPlans()
+        return firebaseRepositoryDailyPlaner.getAllDailyPlans()
     }
 
     fun isToday(date: String): Boolean{
@@ -51,7 +50,7 @@ object NotificationDataUtils {
         val thisMonth = today.get(Calendar.MONTH) + 1
 
         compositeDisposable.add(
-            firebaseRepositoryDailyPlaner.readDailyPlansForMonth(thisMonth)
+            firebaseRepositoryDailyPlaner.getDailyPlansForMonth(thisMonth)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {dailyPlanerList->
@@ -78,7 +77,7 @@ object NotificationDataUtils {
     }
 
     fun getSingleDailyPlanById(dailyPlanId: String): Observable<DailyPlaner>{
-        return firebaseRepositoryDailyPlaner.readSingleDailyPlan(dailyPlanId)
+        return firebaseRepositoryDailyPlaner.getSingleDailyPlan(dailyPlanId)
     }
 
     fun clear(){

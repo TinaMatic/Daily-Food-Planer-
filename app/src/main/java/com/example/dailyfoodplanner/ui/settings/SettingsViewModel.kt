@@ -31,7 +31,6 @@ class SettingsViewModel @Inject constructor(): ViewModel() {
     }
 
     fun getUserData(){
-
         userProfileLoading.value = true
 
         compositeDisposable.add(firebaseRepositoryUsers.getUserProfileData()

@@ -38,10 +38,9 @@ class RecipeDetailsFragment : DaggerFragment() {
 
         recipeDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(RecipeDetailsViewModel::class.java)
 
-        val recipeId = RecipeDetailsFragmentArgs.fromBundle(arguments!!).recipeId
+        val recipeId = RecipeDetailsFragmentArgs.fromBundle(requireArguments()).recipeId
 
-        loadRecipeDeatils(recipeId!!)
-
+        loadRecipeDetails(recipeId!!)
     }
 
     override fun onDestroyView() {
@@ -49,10 +48,10 @@ class RecipeDetailsFragment : DaggerFragment() {
         recipeDetailsViewModel.clear()
     }
 
-    fun loadRecipeDeatils(recipeId: String){
-        recipeDetailsViewModel.loadRecipeDetails(recipeId)
+    private fun loadRecipeDetails(recipeId: String){
+        recipeDetailsViewModel.getRecipeDetails(recipeId)
 
-        recipeDetailsViewModel.recipeDetailsLiveData.observe(this, Observer {
+        recipeDetailsViewModel.recipeDetailsLiveData.observe(viewLifecycleOwner, Observer {
             tvRecipeTitle.text = it.title
             tvRecipeDescription.text = it.description
 

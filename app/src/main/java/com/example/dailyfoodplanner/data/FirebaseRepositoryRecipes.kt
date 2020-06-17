@@ -14,7 +14,7 @@ class FirebaseRepositoryRecipes @Inject constructor() {
 
     private val mAuth = FirebaseAuth.getInstance()
 
-    fun writeRecipes(recipes: Recipes): Observable<Boolean>{
+    fun addRecipes(recipes: Recipes): Observable<Boolean>{
         val currentUserId = mAuth.currentUser!!.uid
         val recipeId = recipesDatabase.push().key
 
@@ -31,7 +31,7 @@ class FirebaseRepositoryRecipes @Inject constructor() {
         }
     }
 
-    fun loadAllRecipes(): Observable<List<Recipes>>{
+    fun getAllRecipes(): Observable<List<Recipes>>{
         val currentUserId = mAuth.currentUser!!.uid
 
         return Observable.create<List<Recipes>> {emitter ->
@@ -71,7 +71,7 @@ class FirebaseRepositoryRecipes @Inject constructor() {
         }
     }
 
-    fun loadSingleRecipe(recipeId: String): Observable<Recipes>{
+    fun getSingleRecipe(recipeId: String): Observable<Recipes>{
         val currentUserId = mAuth.currentUser!!.uid
 
         return Observable.create<Recipes> {emitter ->

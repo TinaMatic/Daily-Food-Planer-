@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Basic-->
+    <string name="btn_yes">Da</string>
+    <string name="btn_no">Ne</string>
+    <string name="error_message">Nešto je krenulo naopako</string>
+    <string name="error_message_edit">Nešto je krenulo naopako kod promene</string>
+    <string name="error_message_deleting">Nešto je krenulo naopako kod brisanja</string>
+
+    <string name="sunday">Nedelja</string>
+    <string name="monday">Ponedeljak</string>
+    <string name="tuesday">Utorak</string>
+    <string name="wednesday">Sreda</string>
+    <string name="thursday">Četvrtak</string>
+    <string name="friday">Petak</string>
+    <string name="saturday">Subota</string>
+
+    <!--Navigation titles-->
+    <string name="title_home">Početna</string>
+    <string name="title_schedule">Raspored</string>
+    <string name="title_recipes">Recepti</string>
+    <string name="title_notes">Beleške</string>
+    <string name="title_recipe_details">Recepti Detalji</string>
+    <string name="title_schedule_edit">Izmeni Raspored</string>
+    <string name="title_settings">Podešavanja</string>
+
+    <!--Home screen-->
+    <string name="date">Datum</string>
+    <string name="time">Vreme</string>
+    <string name="breakfast">Doručak</string>
+    <string name="snack1">Užina 1</string>
+    <string name="lunch">Ručak</string>
+    <string name="snack2">Užina 2</string>
+    <string name="dinner">Večera</string>
+    <string name="leave_screen_dialog_title">Napusti</string>
+    <string name="leave_screen_dialog_message">Da li ste sigurni da želite da napustite početnu stranicu?</string>
+    <string name="no_recipe">Bez Recepta</string>
+    <string name="today">Danas,</string>
+    <string name="daily_plan_successfully_added">Dnevni plan uspešno dodat</string>
+    <string name="daily_plan_successfully_updated">Dnevni plan uspešno promenjen</string>
+    <string name="daily_plan_exist">Dnevni plan sa %1$s datumom već postoji</string>
+    <string name="date_mandatory">Datum je obavezan</string>
+    <string name="breakfast_time_mandatory">Vreme za doručak je obavezan</string>
+    <string name="snack_time_mandatory">Vreme za užinu je obavezan</string>
+    <string name="lunch_time_mandatory">Vreme za ručak je obavezan</string>
+    <string name="dinner_time_mandatory">Vreme za večeru je obavezan</string>
+
+
+    <!--Notes screen-->
+    <string name="notesTitle">Beleške:</string>
+    <string name="myNotes">Moje Beleške</string>
+    <string name="note_successfully_added">Beleška uspešno dodata</string>
+    <string name="note_successfully_deleted">Beleška uspešno obrisana</string>
+
+    <!--Schedule screen-->
+    <string name="month_label">Mesec:</string>
+    <string name="delete_title">Obriši</string>
+    <string name="delete_message">Da li ste sigurni da želite da obrišete?</string>
+    <string name="daily_plan_successfully_deleted">Dnevni plan uspešno obrisan</string>
+
+    <string-array name="months">
+        <item>Januar</item>
+        <item>Februar</item>
+        <item>Mart</item>
+        <item>April</item>
+        <item>Maj</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Avgust</item>
+        <item>Septembar</item>
+        <item>Oktobar</item>
+        <item>Novembar</item>
+        <item>Decembar</item>
+    </string-array>
+
+    <!--Notifications-->
+    <string name="notification_title">Daily Food Plan Obaveštenje</string>
+    <string name="notification_description">Vreme za jelo</string>
+
+    <!--Recipes screen-->
+    <string name="btn_show_more">Prikaži Više</string>
+    <string name="recipe_search">Pretraži recepte</string>
+    <string name="btn_search">Pretraži</string>
+    <string name="recipe_title">Unesite naslov recepta</string>
+    <string name="recipe_description">Unesite opis recepta</string>
+    <string name="recipe_ingredients">Unesite sastojke odvojene zarezom</string>
+    <string name="add_recipe_title">Dodaj novi recept</string>
+    <string name="add_recipe">Dodaj</string>
+    <string name="cancel_recipe">Otkaži</string>
+    <string name="edit_recipe_title">Promeni Recept</string>
+    <string name="update_recipe">Promeni</string>
+    <string name="recipe_successfully_added">Recept uspešno dodat</string>
+    <string name="recipe_successfully_updated">Recept uspešno promenjen</string>
+    <string name="recipe_successfully_deleted">Recept uspešno obrisan</string>
+
+    <!--Recipe Details screen-->
+    <string name="recipe_details_description">Opis:</string>
+    <string name="recipe_details_ingredients">Sastojci:</string>
+
+    <!--Settings Screen-->
+    <string name="notifications_label">Isključite/Uključite obaveštenja</string>
+    <string name="logout">Logout</string>
+    <string name="notification_dialog_title">Promenite podešavanja za obaveštenja</string> Za promenu podešavanja za obaveštenja idite na podešavanja telefona
+    <string name="notification_dialog_message">Za promenu podešavanja za obaveštenja idite na podešavanja telefona</string>
+    <string name="picture_successfully_added">Slika uspešno dodata</string>
+
+    <!--Login and Register screen-->
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Šifra</string>
+    <string name="username_hint">Korisničko ime</string>
+    <string name="login">Login</string>
+    <string name="register">Registruj se</string>
+    <string name="no_account_register">Nemaš nalog? Registruj se ovde</string>
+    <string name="email_mandatory">Email je obavezan</string>
+    <string name="password_mandatory">Šifra je obavezna</string>
+    <string name="username_mandatory">Korisničko ime je obavezno</string>
+</resources>

@@ -5,7 +5,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.drawable.Animatable
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,19 +17,16 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.CheckedNotes
 import com.example.dailyfoodplanner.model.Notes
-import com.jakewharton.rxbinding2.view.clicks
 import dagger.android.support.DaggerFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_notes.*
-import kotlinx.android.synthetic.main.item_note.*
 import javax.inject.Inject
 
 /**
@@ -87,14 +83,14 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
     }
 
     private fun loadAllNotes(){
-        notesViewModel.loadAllNotes()
+        notesViewModel.getAllNotes()
 
         notesViewModel.notesLiveData.observe(viewLifecycleOwner, Observer {listAllNotes->
             setUpAdapter(listAllNotes)
             notesAdapter?.notifyDataSetChanged()
         })
 
-        notesViewModel.notesLoading.observe(this, Observer {
+        notesViewModel.notesLoading.observe(viewLifecycleOwner, Observer {
             showProgressBarNotes(it)
         })
     }
@@ -123,14 +119,14 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
 
     private fun writeNote(note: String){
         if(note.isNotBlank()){
-            compositeDisposable.add(notesViewModel.writeNote(Notes(null, note))
+            compositeDisposable.add(notesViewModel.addNote(Notes(null, note))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     if(it){
-                        Toast.makeText(context, "Note successfully added", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.note_successfully_added), Toast.LENGTH_SHORT).show()
                     }else{
-                        Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
                     }
                 })
         }
@@ -143,9 +139,9 @@ class NotesFragment : DaggerFragment(), View.OnClickListener, NotesAdapter.OnIte
                 if(it){
                     btnDeleteNotes.visibility = View.INVISIBLE
                     btnAddNotes.visibility = View.VISIBLE
-                    Toast.makeText(context, "Notes successfully deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.note_successfully_deleted), Toast.LENGTH_SHORT).show()
                 } else{
-                    Toast.makeText(context, "Something went wrong when deleting", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.error_message_deleting), Toast.LENGTH_SHORT).show()
                 }
             }
         )

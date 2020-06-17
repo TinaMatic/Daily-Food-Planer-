@@ -1,5 +1,7 @@
 package com.example.dailyfoodplanner.utils
 
+import android.content.Context
+import com.example.dailyfoodplanner.R
 import com.example.dailyfoodplanner.model.DailyPlaner
 import java.sql.Time
 import java.text.SimpleDateFormat
@@ -31,15 +33,15 @@ class DateTimeUtils {
             return calendar
         }
 
-        fun getDayOfWeek(dayOfWeekNum: Int): String{
+        fun getDayOfWeek(dayOfWeekNum: Int, context: Context): String{
             return when(dayOfWeekNum){
-                1-> "Sunday"
-                2 -> "Monday"
-                3-> "Tuesday"
-                4-> "Wednesday"
-                5-> "Thursday"
-                6-> "Friday"
-                7-> "Saturday"
+                1-> context.resources.getString(R.string.sunday)
+                2 -> context.resources.getString(R.string.monday)
+                3-> context.resources.getString(R.string.tuesday)
+                4-> context.resources.getString(R.string.wednesday)
+                5-> context.resources.getString(R.string.thursday)
+                6-> context.resources.getString(R.string.friday)
+                7-> context.resources.getString(R.string.saturday)
                 else -> ""
             }
         }
@@ -55,7 +57,7 @@ class DateTimeUtils {
             }
         }
 
-        fun getMinuteForMeail(dailyPlaner: DailyPlaner, typeOfMeal: String): Int{
+        fun getMinuteForMeal(dailyPlaner: DailyPlaner, typeOfMeal: String): Int{
             return when(typeOfMeal.toLowerCase()){
                 "breakfast" -> dailyPlaner.timeBreakfast.substring(3).toInt()
                 "snack1" -> dailyPlaner.timeSnack1.substring(3).toInt()
