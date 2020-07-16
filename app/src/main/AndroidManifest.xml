@@ -56,7 +56,12 @@
         <receiver
             android:name=".notification.DailyReceiver"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false" >
+
+            <intent-filter>
+                <action android:name="com.example.dailyfoodplanner.action.DAILY_RECEIVER"/>
+            </intent-filter>
+        </receiver>
 
         <!-- For receiving the broadcast the app is booted-->
         <receiver

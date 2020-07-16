@@ -25,6 +25,7 @@ class FirebaseRepository @Inject constructor() {
                     if(task.isSuccessful){
                         emitter.onNext(true)
                     } else{
+                        Log.i("Login onError", task.exception.toString())
                         emitter.onNext(false)
                     }
                 }
@@ -41,7 +42,7 @@ class FirebaseRepository @Inject constructor() {
 
                         val currentUserDatabase =  mDatabaseReference.child(userId).child("Users")
 
-                        val user = User(userId, username, email, password, "none")
+                        val user = User(userId, username, email, password.hashCode(), "none")
 
                         currentUserDatabase.setValue(user).addOnCompleteListener { task: Task<Void> ->
                             if(task.isSuccessful){

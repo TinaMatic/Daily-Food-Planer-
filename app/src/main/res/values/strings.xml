@@ -126,5 +126,6 @@
     <string name="email_mandatory">Email is mandatory</string>
     <string name="password_mandatory">Password is mandatory</string>
     <string name="username_mandatory">Username is mandatory</string>
-
+    <string name="password_not_long_enough">Password has to be at least 6 characters</string>
+    <string name="user_does_not_exist">User does not exist</string>
 </resources>

@@ -59,7 +59,7 @@ object AlarmScheduler {
         val minute = getMinuteForMeal(dailyPlaner, typeOfMeal)
 
         //set up the time to schedule the alarm
-        val dateTimeAlarm = Calendar.getInstance()
+        val dateTimeAlarm = Calendar.getInstance(Locale.getDefault())
         dateTimeAlarm.set(Calendar.YEAR, year)
         dateTimeAlarm.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         dateTimeAlarm.set(Calendar.MONTH, month - 1)

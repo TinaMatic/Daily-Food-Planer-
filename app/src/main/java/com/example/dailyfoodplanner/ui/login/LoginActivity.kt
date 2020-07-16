@@ -85,7 +85,7 @@ class LoginActivity : DaggerAppCompatActivity() {
                 if(it){
                     loginIntoApp()
                 } else{
-                    Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.user_does_not_exist), Toast.LENGTH_SHORT).show()
                 }
             })
     }

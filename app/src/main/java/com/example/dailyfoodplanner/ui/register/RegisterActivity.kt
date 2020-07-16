@@ -51,16 +51,28 @@ class RegisterActivity : DaggerAppCompatActivity() {
         val email = etEmailRegister.text.toString()
         val password = etPasswordRegister.text.toString()
 
-        compositeDisposable.add(registerViewModel.registerUser(email, password, username)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                if(it){
-                    loginIntoApp()
-                }  else{
-                    Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
-                }
-            })
+        if(isPasswordLongEnough(password)){
+            compositeDisposable.add(registerViewModel.registerUser(email, password, username)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if(it){
+                        loginIntoApp()
+                    }  else{
+                        Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
+    }
+
+    private fun isPasswordLongEnough(password: String): Boolean{
+        return if(password.length >= 6){
+            textInputPasswordRegister.isErrorEnabled = false
+            true
+        } else {
+            textInputPasswordRegister.error = getString(R.string.password_not_long_enough)
+            false
+        }
     }
 
     private fun checkIfAllDataIsFilled(): Boolean{

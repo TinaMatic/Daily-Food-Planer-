@@ -115,4 +115,6 @@
     <string name="email_mandatory">Email je obavezan</string>
     <string name="password_mandatory">Šifra je obavezna</string>
     <string name="username_mandatory">Korisničko ime je obavezno</string>
+    <string name="password_not_long_enough">Šifra mora ima najmanje 6 karaktera</string>
+    <string name="user_does_not_exist">Korisnik ne postoji</string>
 </resources>
